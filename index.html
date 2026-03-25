@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#FF6B6B">
-  <title>ReLife AI | Smart Community Expiry Rescue - Location Based</title>
+  <title>ReLife AI | Smart Community Expiry Rescue</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -121,11 +121,16 @@
       border: none;
       cursor: pointer;
       width: 100%;
+      transition: all 0.2s;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, #FF6B6B, #FF4757);
       color: white;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
     }
 
     .btn-outline {
@@ -228,61 +233,18 @@
       opacity: 1;
     }
 
-    /* Chat Styles */
-    .chat-list-item, .match-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-bottom: 1px solid #E5E9F0;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .chat-list-item:hover, .match-card:hover {
-      background: #F9FAFB;
-    }
-
-    .match-card {
-      border-left: 4px solid #FF6B6B;
-      margin-bottom: 12px;
+    .item-card {
+      border: 1px solid #E5E9F0;
       border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
       background: white;
     }
 
-    .match-score {
-      background: linear-gradient(135deg, #FF6B6B, #FF4757);
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: white;
-      display: inline-block;
-    }
-
-    .chat-avatar {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #FF6B6B, #FF4757);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .chat-info {
-      flex: 1;
-    }
-
-    .chat-name {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .chat-last-message {
-      font-size: 0.75rem;
-      color: #6B7280;
+    .item-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .chat-container {
@@ -321,6 +283,12 @@
       border-bottom-left-radius: 4px;
     }
 
+    .message-time {
+      font-size: 0.65rem;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
+
     .chat-input-area {
       padding: 16px;
       background: white;
@@ -346,6 +314,31 @@
       cursor: pointer;
     }
 
+    .chat-list-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid #E5E9F0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chat-list-item:hover {
+      background: #F9FAFB;
+    }
+
+    .chat-avatar {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #FF6B6B, #FF4757);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
     .back-button {
       background: none;
       border: none;
@@ -353,14 +346,6 @@
       cursor: pointer;
       color: white;
       margin-right: 10px;
-    }
-
-    .qr-code-container {
-      text-align: center;
-      padding: 16px;
-      background: white;
-      border-radius: 12px;
-      margin: 12px 0;
     }
 
     .modal {
@@ -393,19 +378,6 @@
       text-align: center;
     }
 
-    .item-card {
-      border: 1px solid #E5E9F0;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 12px;
-      transition: all 0.2s;
-    }
-
-    .item-card:hover {
-      transform: translateX(5px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
     @media (max-width: 450px) {
       .app-wrapper {
         width: 100%;
@@ -416,55 +388,37 @@
 <body>
 <div class="app-wrapper">
   <div class="app-header" id="appHeader">
-    <h1>
-      <i class="fas fa-leaf"></i> ReLife AI
-    </h1>
-    <div class="subtitle">Smart Community Expiry Rescue | Location Based</div>
+    <h1><i class="fas fa-leaf"></i> ReLife AI</h1>
+    <div class="subtitle">Smart Community Expiry Rescue | Real-time Sharing</div>
   </div>
 
   <div class="content-area" id="contentArea"></div>
 
   <div class="bottom-nav">
-    <button class="nav-item active" data-page="home">
-      <i class="fas fa-home"></i>
-      <span>Home</span>
-    </button>
-    <button class="nav-item" data-page="donate">
-      <i class="fas fa-gift"></i>
-      <span>Donate</span>
-    </button>
-    <button class="nav-item" data-page="quick-request">
-      <i class="fas fa-bolt"></i>
-      <span>Quick Request</span>
-    </button>
-    <button class="nav-item" data-page="chats">
-      <i class="fas fa-comments"></i>
-      <span>Chats</span>
-    </button>
-    <button class="nav-item" data-page="profile">
-      <i class="fas fa-user"></i>
-      <span>Profile</span>
-    </button>
+    <button class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
+    <button class="nav-item" data-page="donate"><i class="fas fa-gift"></i><span>Donate</span></button>
+    <button class="nav-item" data-page="quick-request"><i class="fas fa-bolt"></i><span>Request</span></button>
+    <button class="nav-item" data-page="chats"><i class="fas fa-comments"></i><span>Chats</span></button>
+    <button class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></button>
   </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
-<!-- QR Modal for Donor -->
+<!-- QR Modal -->
 <div id="qrModal" class="modal">
   <div class="modal-content">
     <h3><i class="fas fa-qrcode"></i> Pickup QR Code</h3>
     <div id="qrCodeContainer"></div>
-    <p style="font-size: 0.75rem; margin: 12px 0;">Share this QR with the receiver for pickup verification</p>
     <button class="btn btn-primary" id="closeQrBtn">Close</button>
   </div>
 </div>
 
-<!-- Scanner Modal for Receiver -->
+<!-- Scanner Modal -->
 <div id="scannerModal" class="modal">
   <div class="modal-content">
-    <h3><i class="fas fa-camera"></i> Scan Donor's QR Code</h3>
-    <div id="qr-reader" style="width: 100%;"></div>
+    <h3><i class="fas fa-camera"></i> Scan QR Code</h3>
+    <div id="qr-reader"></div>
     <div id="scanResult"></div>
     <button class="btn btn-secondary" id="closeScannerBtn">Close</button>
   </div>
@@ -473,7 +427,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, where, getDocs, limit } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
 
   const firebaseConfig = {
@@ -493,50 +447,38 @@
   let currentUser = null;
   let currentPage = 'home';
   let userLocation = null;
-  let currentChatRoom = null;
+  let unsubscribeDonations = null;
+  let unsubscribeRequests = null;
   let unsubscribeMessages = null;
   let selectedImageFile = null;
   let html5QrScanner = null;
+  let currentMatchId = null;
 
-  // Availability options with time brackets
   const availabilityOptions = [
-    { value: "Early Morning (5:00 AM - 8:00 AM)", label: "🌅 Early Morning (5:00 AM - 8:00 AM)" },
-    { value: "Morning (8:00 AM - 12:00 PM)", label: "☀️ Morning (8:00 AM - 12:00 PM)" },
-    { value: "Afternoon (12:00 PM - 4:00 PM)", label: "🌤️ Afternoon (12:00 PM - 4:00 PM)" },
-    { value: "Evening (4:00 PM - 7:00 PM)", label: "🌙 Evening (4:00 PM - 7:00 PM)" },
-    { value: "Night (7:00 PM - 10:00 PM)", label: "⭐ Night (7:00 PM - 10:00 PM)" },
-    { value: "Late Night (10:00 PM - 5:00 AM)", label: "🌙 Late Night (10:00 PM - 5:00 AM)" },
-    { value: "Flexible - Any time", label: "🕒 Flexible - Any time" }
+    "🌅 Early Morning (5-8 AM)",
+    "☀️ Morning (8 AM-12 PM)",
+    "🌤️ Afternoon (12-4 PM)",
+    "🌙 Evening (4-7 PM)",
+    "⭐ Night (7-10 PM)",
+    "🕒 Flexible"
   ];
 
-  // Calculate distance between two coordinates (in km)
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
   function calculateDistance(lat1, lon1, lat2, lon2) {
-    if (!lat1 || !lat2 || !lon1 || !lon2) return null;
+    if (!lat1 || !lat2) return null;
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
               Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
               Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-  }
-
-  // Filter items by location (only show items within 50km)
-  function filterByLocation(items, userLoc, maxDistance = 50) {
-    if (!userLoc || !items) return items;
-    return items.filter(item => {
-      if (!item.location) return false;
-      const distance = calculateDistance(userLoc.lat, userLoc.lng, item.location.lat, item.location.lng);
-      return distance !== null && distance <= maxDistance;
-    });
-  }
-
-  function showToast(message) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   }
 
   function enableLocation() {
@@ -544,398 +486,33 @@
       showToast("Geolocation not supported");
       return;
     }
-    showToast("📍 Getting your location...");
+    showToast("Getting your location...");
     navigator.geolocation.getCurrentPosition(
       (position) => {
         userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
-        showToast(`📍 Location set! Showing items near you.`);
+        showToast(`📍 Location set! Showing nearby items.`);
         renderCurrentPage();
       },
-      (error) => {
-        console.error("Location error:", error);
-        showToast("Please enable location to see nearby items");
-      }
+      () => showToast("Please enable location")
     );
   }
 
-  // Upload image function
-  async function uploadImage(file, path) {
+  async function uploadImage(file) {
     if (!file) return null;
-    try {
-      const storageRef = ref(storage, path);
-      await uploadBytes(storageRef, file);
-      return await getDownloadURL(storageRef);
-    } catch(err) {
-      console.error("Upload error:", err);
-      return null;
-    }
+    const storageRef = ref(storage, `items/${Date.now()}_${file.name}`);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef);
   }
 
-  // Calculate match score
-  function calculateMatchScore(donation, request) {
-    let score = 0;
-    const donationName = donation.name.toLowerCase();
-    const requestName = request.name.toLowerCase();
-    
-    if (donationName.includes(requestName) || requestName.includes(donationName)) {
-      score += 40;
-    }
-    
-    if (donation.urgency === 'high' && request.urgency === 'high') score += 20;
-    else if (donation.urgency === 'high' || request.urgency === 'high') score += 10;
-    
-    if (donation.availability === request.availability) score += 10;
-    
-    return Math.min(score, 100);
-  }
-
-  // Create match and open chat
-  async function createMatchAndChat(donationId, requestId, donationName, requestName, donorId, donorName, requesterId, requesterName) {
-    try {
-      const matchId = `${donationId}_${requestId}_${Date.now()}`;
-      const qrData = JSON.stringify({
-        matchId: matchId,
-        donationId: donationId,
-        donationName: donationName,
-        timestamp: Date.now()
-      });
-      
-      await addDoc(collection(db, "matches"), {
-        matchId: matchId,
-        donationId: donationId,
-        requestId: requestId,
-        donationName: donationName,
-        requestName: requestName,
-        donorId: donorId,
-        donorName: donorName,
-        requesterId: requesterId,
-        requesterName: requesterName,
-        qrData: qrData,
-        status: "pending_pickup",
-        createdAt: serverTimestamp()
-      });
-      
-      await updateDoc(doc(db, "donations", donationId), { status: "matched", matchId: matchId });
-      await updateDoc(doc(db, "requests", requestId), { status: "matched", matchId: matchId });
-      
-      const chatId = [donorId, requesterId].sort().join('_');
-      await addDoc(collection(db, "chats"), {
-        chatId: chatId,
-        matchId: matchId,
-        participants: [donorId, requesterId],
-        participantNames: {
-          [donorId]: donorName,
-          [requesterId]: requesterName
-        },
-        donationName: donationName,
-        requestName: requestName,
-        lastMessage: "Match created! You can now coordinate pickup.",
-        lastMessageTime: serverTimestamp(),
-        createdAt: serverTimestamp()
-      });
-      
-      await addDoc(collection(db, "messages"), {
-        chatId: chatId,
-        senderId: "system",
-        senderName: "ReLife AI",
-        message: `🎉 Match found! ${donorName} has ${donationName} available. ${requesterName} needs it. Please coordinate pickup details here.`,
-        timestamp: serverTimestamp(),
-        isSystem: true
-      });
-      
-      showToast("✓ Match found! Opening chat...");
-      
-      setTimeout(() => {
-        openChat(chatId, donorId === currentUser?.uid ? requesterName : donorName, 
-                donorId === currentUser?.uid ? requesterId : donorId, donationName, matchId);
-      }, 1000);
-      
-      return matchId;
-    } catch(err) {
-      showToast("Error: " + err.message);
-    }
-  }
-
-  // AI Matching Engine
-  async function findAndCreateMatches() {
-    const donationsSnap = await getDocs(query(collection(db, "donations"), where("status", "==", "available")));
-    const requestsSnap = await getDocs(query(collection(db, "requests"), where("status", "==", "pending")));
-    
-    const donations = [];
-    const requests = [];
-    donationsSnap.forEach(doc => donations.push({ id: doc.id, ...doc.data() }));
-    requestsSnap.forEach(doc => requests.push({ id: doc.id, ...doc.data() }));
-    
-    const matches = [];
-    for (const donation of donations) {
-      for (const request of requests) {
-        const score = calculateMatchScore(donation, request);
-        if (score > 60) {
-          matches.push({ donation, request, score });
-        }
-      }
-    }
-    
-    matches.sort((a, b) => b.score - a.score);
-    
-    if (matches.length > 0 && currentUser) {
-      const topMatch = matches[0];
-      const isDonor = topMatch.donation.userId === currentUser.uid;
-      const isRequester = topMatch.request.userId === currentUser.uid;
-      
-      if (isDonor || isRequester) {
-        showToast(`🤖 AI found a ${topMatch.score}% match! Opening chat...`);
-        await createMatchAndChat(
-          topMatch.donation.id, topMatch.request.id,
-          topMatch.donation.name, topMatch.request.name,
-          topMatch.donation.userId, topMatch.donation.userEmail?.split('@')[0] || 'Donor',
-          topMatch.request.userId, topMatch.request.userEmail?.split('@')[0] || 'Requester'
-        );
-      }
-    }
-  }
-
-  // Chat functions
-  async function sendMessage(chatId, message) {
-    if (!message.trim() || !currentUser) return;
-    
-    await addDoc(collection(db, "messages"), {
-      chatId: chatId,
-      senderId: currentUser.uid,
-      senderName: currentUser.email.split('@')[0],
-      message: message.trim(),
-      timestamp: serverTimestamp(),
-      read: false
-    });
-    
-    const chatsQuery = query(collection(db, "chats"), where("chatId", "==", chatId));
-    const chatSnapshot = await getDocs(chatsQuery);
-    chatSnapshot.forEach(async (docSnap) => {
-      await updateDoc(docSnap.ref, {
-        lastMessage: message.trim(),
-        lastMessageTime: serverTimestamp()
-      });
-    });
-  }
-
-  function loadMessages(chatId) {
-    if (unsubscribeMessages) unsubscribeMessages();
-    
-    const messagesQuery = query(collection(db, "messages"), where("chatId", "==", chatId), orderBy("timestamp", "asc"));
-    unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
-      const messages = [];
-      snapshot.forEach(doc => messages.push({ id: doc.id, ...doc.data() }));
-      renderChatMessages(messages);
-    });
-  }
-
-  function renderChatMessages(messages) {
-    const container = document.getElementById('chatMessages');
-    if (!container) return;
-    
-    container.innerHTML = messages.map(msg => `
-      <div class="message ${msg.senderId === currentUser?.uid ? 'message-sent' : 'message-received'}">
-        <div>${escapeHtml(msg.message)}</div>
-        <div class="message-time">${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</div>
-      </div>
-    `).join('');
-    
-    container.scrollTop = container.scrollHeight;
-  }
-
-  function showDonorQR(matchId, donationName) {
-    const qrData = JSON.stringify({
-      matchId: matchId,
-      donationName: donationName,
-      verificationCode: Math.random().toString(36).substring(2, 10).toUpperCase(),
-      timestamp: Date.now()
-    });
-    
-    const qrContainer = document.getElementById('qrCodeContainer');
-    qrContainer.innerHTML = '';
-    new QRCode(qrContainer, {
-      text: qrData,
-      width: 200,
-      height: 200,
-      colorDark: "#FF6B6B",
-      colorLight: "#ffffff"
-    });
-    document.getElementById('qrModal').classList.add('active');
-    showToast("📱 QR Code generated! Share with receiver for pickup");
-  }
-
-  async function initScanner() {
-    if (html5QrScanner) {
-      try { await html5QrScanner.stop(); } catch(e) {}
-    }
-    
-    html5QrScanner = new Html5Qrcode("qr-reader");
-    try {
-      await html5QrScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, async (decodedText) => {
-        try {
-          const data = JSON.parse(decodedText);
-          const matchesQuery = query(collection(db, "matches"), where("matchId", "==", data.matchId));
-          const querySnapshot = await getDocs(matchesQuery);
-          
-          if (!querySnapshot.empty) {
-            const matchDoc = querySnapshot.docs[0];
-            const match = matchDoc.data();
-            
-            if (match.status === 'pending_pickup') {
-              document.getElementById('scanResult').innerHTML = `
-                <div style="background: #D1FAE5; padding: 12px; border-radius: 12px; margin-top: 12px;">
-                  <strong>✓ Valid QR Code!</strong><br>
-                  Item: ${escapeHtml(match.donationName)}<br>
-                  <button id="verifyPickupBtn" class="btn btn-success" style="margin-top: 8px;">Confirm Pickup</button>
-                </div>
-              `;
-              document.getElementById('verifyPickupBtn')?.addEventListener('click', async () => {
-                await updateDoc(doc(db, "matches", matchDoc.id), { 
-                  status: "completed", 
-                  completedAt: serverTimestamp(),
-                  verifiedBy: currentUser?.uid
-                });
-                showToast("🎉 Pickup verified! Thank you for reducing waste!");
-                document.getElementById('scannerModal').classList.remove('active');
-                if (html5QrScanner) await html5QrScanner.stop();
-              });
-            } else {
-              document.getElementById('scanResult').innerHTML = '<p style="color: #DC2626;">❌ This item has already been picked up</p>';
-            }
-          } else {
-            document.getElementById('scanResult').innerHTML = '<p style="color: #DC2626;">❌ Invalid QR code</p>';
-          }
-        } catch(e) {
-          document.getElementById('scanResult').innerHTML = '<p style="color: #DC2626;">❌ Invalid QR code</p>';
-        }
-      });
-    } catch(err) {
-      showToast("Camera access needed");
-    }
-  }
-
-  function openChat(chatId, otherName, otherId, itemName, matchId) {
-    currentChatRoom = { chatId, otherName, otherId, itemName, matchId };
-    
-    document.getElementById('appHeader').innerHTML = `
-      <button class="back-button" onclick="location.reload()">←</button>
-      <h1 style="font-size: 1.2rem;"><i class="fas fa-comments"></i> Chat with ${escapeHtml(otherName)}</h1>
-      <div class="subtitle">Item: ${escapeHtml(itemName)}</div>
-    `;
-    
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `
-      <div class="chat-container">
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input-area">
-          <input type="text" id="messageInput" placeholder="Type a message...">
-          <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
-        </div>
-      </div>
-    `;
-    
-    if (currentUser?.uid === otherId) {
-      const qrButton = document.createElement('div');
-      qrButton.style.padding = '12px';
-      qrButton.style.margin = '8px 16px';
-      qrButton.innerHTML = `<button class="btn btn-primary" id="showQrBtn"><i class="fas fa-qrcode"></i> Generate Pickup QR Code</button>`;
-      document.querySelector('.chat-input-area').before(qrButton);
-      document.getElementById('showQrBtn')?.addEventListener('click', () => showDonorQR(matchId, itemName));
-    } else if (currentUser?.uid !== otherId) {
-      const scannerButton = document.createElement('div');
-      scannerButton.style.padding = '12px';
-      scannerButton.style.margin = '8px 16px';
-      scannerButton.innerHTML = `<button class="btn btn-primary" id="showScannerBtn"><i class="fas fa-camera"></i> Scan Donor's QR to Confirm Pickup</button>`;
-      document.querySelector('.chat-input-area').before(scannerButton);
-      document.getElementById('showScannerBtn')?.addEventListener('click', async () => {
-        document.getElementById('scannerModal').classList.add('active');
-        await initScanner();
-      });
-    }
-    
-    loadMessages(chatId);
-    
-    document.getElementById('sendMessageBtn').addEventListener('click', async () => {
-      const input = document.getElementById('messageInput');
-      await sendMessage(chatId, input.value);
-      input.value = '';
-    });
-    
-    document.getElementById('messageInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        document.getElementById('sendMessageBtn').click();
-      }
-    });
-  }
-
-  async function renderChatList() {
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `
-      <div class="card">
-        <div class="card-title">
-          <i class="fas fa-comments"></i> Your Conversations
-        </div>
-        <div id="chatListContainer">Loading chats...</div>
-      </div>
-    `;
-    
-    const chatsQuery = query(collection(db, "chats"), orderBy("lastMessageTime", "desc"));
-    onSnapshot(chatsQuery, (snapshot) => {
-      const chats = [];
-      snapshot.forEach(doc => {
-        const chat = doc.data();
-        if (chat.participants.includes(currentUser?.uid)) {
-          chats.push({ id: doc.id, ...chat });
-        }
-      });
-      
-      const container = document.getElementById('chatListContainer');
-      if (chats.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-comments" style="font-size: 3rem; color: #9CA3AF;"></i><p>No conversations yet. Post a request or donation to get matched!</p></div>';
-        return;
-      }
-      
-      container.innerHTML = chats.map(chat => {
-        const otherUser = chat.participants.find(p => p !== currentUser?.uid);
-        const otherName = chat.participantNames[otherUser] || 'User';
-        return `
-          <div class="chat-list-item" data-chat-id="${chat.chatId}" data-other-name="${otherName}" data-other-id="${otherUser}" data-item-name="${chat.donationName || 'Item'}" data-match-id="${chat.matchId}">
-            <div class="chat-avatar">
-              <i class="fas fa-user"></i>
-            </div>
-            <div class="chat-info">
-              <div class="chat-name">${escapeHtml(otherName)}</div>
-              <div class="chat-last-message">${escapeHtml(chat.lastMessage || 'No messages yet')}</div>
-              <div style="font-size: 0.65rem; color: #FF6B6B;">${escapeHtml(chat.donationName || '')}</div>
-            </div>
-            <div class="chat-time">
-              ${chat.lastMessageTime ? new Date(chat.lastMessageTime.toDate()).toLocaleDateString() : 'New'}
-            </div>
-          </div>
-        `;
-      }).join('');
-      
-      document.querySelectorAll('.chat-list-item').forEach(item => {
-        item.addEventListener('click', () => {
-          openChat(item.dataset.chatId, item.dataset.otherName, item.dataset.otherId, item.dataset.itemName, item.dataset.matchId);
-        });
-      });
-    });
-  }
-
-  // Add Donation with Location
-  async function addDonation(name, expiry, availability, urgency, notes, imageFile) {
+  // DONATE ITEM
+  async function donateItem(name, expiry, availability, urgency, notes, imageFile) {
     if (!currentUser) return showToast("Please login");
-    if (!userLocation) {
-      showToast("Please enable location first");
-      enableLocation();
-      return;
-    }
+    if (!userLocation) { showToast("Enable location first"); enableLocation(); return; }
     
     let imageUrl = null;
     if (imageFile) {
-      showToast("📸 Uploading image...");
-      imageUrl = await uploadImage(imageFile, `donations/${Date.now()}_${imageFile.name}`);
+      showToast("Uploading image...");
+      imageUrl = await uploadImage(imageFile);
     }
     
     try {
@@ -943,164 +520,257 @@
         name, expiryDate: expiry, availability, urgency, notes, imageUrl,
         location: userLocation,
         userId: currentUser.uid,
+        userName: currentUser.email.split('@')[0],
         userEmail: currentUser.email,
         createdAt: serverTimestamp(),
         status: "available"
       });
-      showToast("✓ Item donated! Others nearby can now see it.");
-      setTimeout(() => findAndCreateMatches(), 2000);
+      showToast(`✓ "${name}" donated! Others can see it now.`);
       return true;
     } catch(err) { showToast("Error: " + err.message); return false; }
   }
 
-  // Quick Request with Location
-  async function addQuickRequest(name, urgency, availability, reason) {
+  // QUICK REQUEST
+  async function quickRequest(name, urgency, availability, reason) {
     if (!currentUser) return showToast("Please login");
-    if (!userLocation) {
-      showToast("Please enable location first");
-      enableLocation();
-      return;
-    }
+    if (!userLocation) { showToast("Enable location first"); enableLocation(); return; }
     
     try {
       await addDoc(collection(db, "requests"), {
         name, urgency, availability, reason,
         location: userLocation,
         userId: currentUser.uid,
+        userName: currentUser.email.split('@')[0],
         userEmail: currentUser.email,
         createdAt: serverTimestamp(),
         status: "pending"
       });
-      showToast("✓ Request posted! Nearby donors can now help you.");
-      setTimeout(() => findAndCreateMatches(), 2000);
+      showToast(`✓ "${name}" request posted! Donors near you will see it.`);
       return true;
     } catch(err) { showToast("Error: " + err.message); return false; }
   }
 
-  // Home Page - Location-based filtering
-  async function renderHomePage() {
+  // REQUEST ITEM (from donation)
+  async function requestItem(donationId, donorId, donorName, itemName) {
+    if (!currentUser) { showToast("Please login"); return; }
+    if (currentUser.uid === donorId) { showToast("Cannot request own item"); return; }
+    
+    try {
+      await updateDoc(doc(db, "donations", donationId), { status: "requested", requestedBy: currentUser.uid });
+      
+      const chatId = [currentUser.uid, donorId].sort().join('_');
+      const existingChat = await getDocs(query(collection(db, "chats"), where("chatId", "==", chatId)));
+      
+      if (existingChat.empty) {
+        await addDoc(collection(db, "chats"), {
+          chatId: chatId,
+          participants: [currentUser.uid, donorId],
+          participantNames: {
+            [currentUser.uid]: currentUser.userName || currentUser.email.split('@')[0],
+            [donorId]: donorName
+          },
+          itemName: itemName,
+          donationId: donationId,
+          lastMessage: `🎉 ${currentUser.email.split('@')[0]} requested your ${itemName}!`,
+          lastMessageTime: serverTimestamp(),
+          createdAt: serverTimestamp()
+        });
+      }
+      
+      await addDoc(collection(db, "messages"), {
+        chatId: chatId,
+        senderId: currentUser.uid,
+        senderName: currentUser.email.split('@')[0],
+        message: `Hi! I'm interested in your ${itemName}. When can I pick it up?`,
+        timestamp: serverTimestamp()
+      });
+      
+      showToast(`✓ Request sent! Chat opened with ${donorName}`);
+      document.querySelector('[data-page="chats"]').click();
+    } catch(err) { showToast("Error: " + err.message); }
+  }
+
+  // SEND MESSAGE
+  async function sendMessage(chatId, message) {
+    if (!message.trim()) return;
+    await addDoc(collection(db, "messages"), {
+      chatId, senderId: currentUser.uid,
+      senderName: currentUser.email.split('@')[0],
+      message: message.trim(), timestamp: serverTimestamp()
+    });
+    const chatSnap = await getDocs(query(collection(db, "chats"), where("chatId", "==", chatId)));
+    chatSnap.forEach(async (docSnap) => {
+      await updateDoc(docSnap.ref, { lastMessage: message.trim(), lastMessageTime: serverTimestamp() });
+    });
+  }
+
+  // SHOW QR CODE
+  function showQRCode(matchId, itemName) {
+    const qrData = JSON.stringify({ matchId, itemName, timestamp: Date.now() });
+    document.getElementById('qrCodeContainer').innerHTML = '';
+    new QRCode(document.getElementById('qrCodeContainer'), {
+      text: qrData, width: 200, height: 200, colorDark: "#FF6B6B"
+    });
+    document.getElementById('qrModal').classList.add('active');
+    currentMatchId = matchId;
+    showToast("QR Code ready! Share with receiver.");
+  }
+
+  // SCAN QR
+  async function initScanner() {
+    if (html5QrScanner) try { await html5QrScanner.stop(); } catch(e) {}
+    html5QrScanner = new Html5Qrcode("qr-reader");
+    try {
+      await html5QrScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, async (decodedText) => {
+        try {
+          const data = JSON.parse(decodedText);
+          document.getElementById('scanResult').innerHTML = `
+            <div style="background:#D1FAE5;padding:12px;border-radius:12px;margin-top:12px;">
+              <strong>✓ Item Found!</strong><br>${escapeHtml(data.itemName)}<br>
+              <button id="confirmPickupBtn" class="btn btn-success" style="margin-top:8px;">Confirm Pickup</button>
+            </div>`;
+          document.getElementById('confirmPickupBtn')?.addEventListener('click', () => {
+            showToast("🎉 Pickup confirmed! Thank you!");
+            document.getElementById('scannerModal').classList.remove('active');
+            if (html5QrScanner) html5QrScanner.stop();
+          });
+        } catch(e) { document.getElementById('scanResult').innerHTML = '<p style="color:#DC2626;">Invalid QR code</p>'; }
+      });
+    } catch(err) { showToast("Camera access needed"); }
+  }
+
+  // OPEN CHAT
+  function openChat(chatId, otherName, otherId, itemName, donationId) {
+    document.getElementById('appHeader').innerHTML = `
+      <button class="back-button" onclick="location.reload()">←</button>
+      <h1 style="font-size:1.2rem;"><i class="fas fa-comments"></i> Chat with ${escapeHtml(otherName)}</h1>
+      <div class="subtitle">Item: ${escapeHtml(itemName)}</div>`;
+    
+    document.getElementById('contentArea').innerHTML = `
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+          <input type="text" id="messageInput" placeholder="Type a message...">
+          <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>`;
+    
+    if (unsubscribeMessages) unsubscribeMessages();
+    const msgsQuery = query(collection(db, "messages"), where("chatId", "==", chatId), orderBy("timestamp", "asc"));
+    unsubscribeMessages = onSnapshot(msgsQuery, (snapshot) => {
+      const msgs = []; snapshot.forEach(doc => msgs.push(doc.data()));
+      const container = document.getElementById('chatMessages');
+      if (container) {
+        container.innerHTML = msgs.map(m => `
+          <div class="message ${m.senderId === currentUser?.uid ? 'message-sent' : 'message-received'}">
+            <div>${escapeHtml(m.message)}</div>
+            <div class="message-time">${m.timestamp ? new Date(m.timestamp.toDate()).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : 'Now'}</div>
+          </div>`).join('');
+        container.scrollTop = container.scrollHeight;
+      }
+    });
+    
+    // Add QR button for donor
+    if (donationId) {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.padding = '12px';
+      btnDiv.innerHTML = `<button class="btn btn-primary" id="qrBtn"><i class="fas fa-qrcode"></i> Generate Pickup QR Code</button>`;
+      document.querySelector('.chat-input-area').before(btnDiv);
+      document.getElementById('qrBtn')?.addEventListener('click', () => showQRCode(donationId, itemName));
+    }
+    
+    document.getElementById('sendMessageBtn').addEventListener('click', async () => {
+      const input = document.getElementById('messageInput');
+      await sendMessage(chatId, input.value);
+      input.value = '';
+    });
+    document.getElementById('messageInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('sendMessageBtn').click();
+    });
+  }
+
+  // RENDER HOME PAGE - REAL-TIME UPDATES
+  function renderHomePage() {
     const content = document.getElementById('contentArea');
     content.innerHTML = `
-      ${!userLocation ? `
-        <div class="location-banner">
-          <div><i class="fas fa-map-marker-alt"></i> Enable location to see nearby items</div>
-          <button class="btn btn-primary" id="enableLocationBtn" style="width: auto; padding: 8px 16px; background: white; color: #667eea;">Enable</button>
-        </div>
-      ` : `
-        <div class="location-banner">
-          <div><i class="fas fa-check-circle"></i> Showing items within 50km of your location</div>
-          <div style="font-size: 0.7rem;">📍 ${userLocation.lat.toFixed(2)}°, ${userLocation.lng.toFixed(2)}°</div>
-        </div>
-      `}
-      
-      <div class="card">
-        <div class="card-title"><i class="fas fa-gift"></i> Nearby Donations</div>
-        <div id="donationsList">Loading nearby donations...</div>
-      </div>
-      
-      <div class="card">
-        <div class="card-title"><i class="fas fa-hand-holding-heart"></i> Nearby Requests</div>
-        <div id="requestsList">Loading nearby requests...</div>
-      </div>
-    `;
+      ${!userLocation ? `<div class="location-banner"><div><i class="fas fa-map-marker-alt"></i> Enable location to see nearby items</div><button class="btn btn-primary" id="enableLocationBtn" style="width:auto;padding:8px 16px;">Enable</button></div>` : 
+        `<div class="location-banner"><div><i class="fas fa-check-circle"></i> Showing items near you</div><div style="font-size:0.7rem;">📍 ${userLocation.lat.toFixed(2)}°, ${userLocation.lng.toFixed(2)}°</div></div>`}
+      <div class="card"><div class="card-title"><i class="fas fa-gift"></i> Available Donations</div><div id="donationsList">Loading...</div></div>
+      <div class="card"><div class="card-title"><i class="fas fa-hand-holding-heart"></i> Active Requests</div><div id="requestsList">Loading...</div></div>`;
     
-    // Load all donations and filter by location
+    // REAL-TIME DONATIONS
+    if (unsubscribeDonations) unsubscribeDonations();
     const donationsQuery = query(collection(db, "donations"), where("status", "==", "available"), orderBy("createdAt", "desc"));
-    onSnapshot(donationsQuery, (snapshot) => {
+    unsubscribeDonations = onSnapshot(donationsQuery, (snapshot) => {
       const allDonations = [];
       snapshot.forEach(doc => allDonations.push({ id: doc.id, ...doc.data() }));
       
-      // Filter donations by location (only show within 50km)
-      let nearbyDonations = allDonations;
+      let nearby = allDonations;
       if (userLocation) {
-        nearbyDonations = allDonations.filter(d => {
-          if (!d.location) return false;
-          const distance = calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng);
-          return distance !== null && distance <= 50;
-        });
-        // Sort by distance
-        nearbyDonations.sort((a, b) => {
-          const distA = calculateDistance(userLocation.lat, userLocation.lng, a.location?.lat, a.location?.lng) || 999;
-          const distB = calculateDistance(userLocation.lat, userLocation.lng, b.location?.lat, b.location?.lng) || 999;
-          return distA - distB;
+        nearby = allDonations.filter(d => d.location && calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng) <= 50);
+        nearby.sort((a,b) => {
+          const da = calculateDistance(userLocation.lat, userLocation.lng, a.location?.lat, a.location?.lng) || 999;
+          const db = calculateDistance(userLocation.lat, userLocation.lng, b.location?.lat, b.location?.lng) || 999;
+          return da - db;
         });
       }
       
       const container = document.getElementById('donationsList');
-      if (nearbyDonations.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 20px;">No donations found nearby. Be the first to donate!</div>';
-      } else {
-        container.innerHTML = nearbyDonations.map(d => {
-          const distance = userLocation && d.location ? 
-            calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng).toFixed(1) : null;
-          return `
-            <div class="item-card">
-              ${d.imageUrl ? `<img src="${d.imageUrl}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">` : ''}
-              <strong>${escapeHtml(d.name)}</strong><br>
-              <small>📅 Expires: ${formatDate(d.expiryDate)}</small><br>
-              <small>⏰ Available: ${escapeHtml(d.availability)}</small>
-              ${distance ? `<div class="distance-badge">📍 ${distance} km away</div>` : ''}
-              ${d.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">⚠️ Urgent - Expiring Soon!</div>' : ''}
-              <div style="font-size: 0.7rem; color: #4ECDC4; margin-top: 4px;">👤 ${escapeHtml(d.userEmail?.split('@')[0])}</div>
-              ${currentUser && d.userId !== currentUser.uid ? 
-                `<button class="btn btn-primary request-item-btn" style="margin-top: 8px; padding: 8px;" data-id="${d.id}" data-donor="${d.userId}" data-donor-name="${escapeHtml(d.userEmail?.split('@')[0])}" data-name="${escapeHtml(d.name)}"><i class="fas fa-comment"></i> Request & Chat</button>` : 
-                (d.userId === currentUser?.uid ? '<div style="margin-top: 8px; color: #4ECDC4;"><i class="fas fa-check"></i> Your donation</div>' : '')}
-            </div>
-          `;
+      if (nearby.length === 0) container.innerHTML = '<div style="text-align:center;padding:20px;">No donations nearby. Be the first to donate!</div>';
+      else {
+        container.innerHTML = nearby.map(d => {
+          const dist = userLocation && d.location ? calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng).toFixed(1) : null;
+          return `<div class="item-card">
+            ${d.imageUrl ? `<img src="${d.imageUrl}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px;">` : ''}
+            <strong>${escapeHtml(d.name)}</strong><br>
+            <small>📅 Expires: ${formatDate(d.expiryDate)}</small><br>
+            <small>⏰ ${escapeHtml(d.availability)}</small>
+            ${dist ? `<div class="distance-badge">📍 ${dist} km away</div>` : ''}
+            ${d.urgency === 'high' ? '<div style="color:#DC2626;font-size:0.7rem;">⚠️ Urgent</div>' : ''}
+            <div style="font-size:0.7rem;color:#4ECDC4;margin:4px 0;">👤 ${escapeHtml(d.userName || d.userEmail?.split('@')[0])}</div>
+            ${currentUser && d.userId !== currentUser.uid ? 
+              `<button class="btn btn-primary request-btn" data-id="${d.id}" data-donor="${d.userId}" data-donor-name="${escapeHtml(d.userName || d.userEmail?.split('@')[0])}" data-name="${escapeHtml(d.name)}" style="margin-top:8px;"><i class="fas fa-comment"></i> Request & Chat</button>` : 
+              (d.userId === currentUser?.uid ? '<div style="margin-top:8px;color:#4ECDC4;"><i class="fas fa-check"></i> Your donation</div>' : '')}
+          </div>`;
         }).join('');
-      }
-      
-      document.querySelectorAll('.request-item-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const donationId = btn.dataset.id;
-          const donorId = btn.dataset.donor;
-          const donorName = btn.dataset.donorName;
-          const itemName = btn.dataset.name;
-          requestItem(donationId, donorId, donorName, itemName);
+        document.querySelectorAll('.request-btn').forEach(btn => {
+          btn.addEventListener('click', () => requestItem(btn.dataset.id, btn.dataset.donor, btn.dataset.donorName, btn.dataset.name));
         });
-      });
+      }
     });
     
-    // Load all requests and filter by location
+    // REAL-TIME REQUESTS
+    if (unsubscribeRequests) unsubscribeRequests();
     const requestsQuery = query(collection(db, "requests"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
-    onSnapshot(requestsQuery, (snapshot) => {
+    unsubscribeRequests = onSnapshot(requestsQuery, (snapshot) => {
       const allRequests = [];
       snapshot.forEach(doc => allRequests.push({ id: doc.id, ...doc.data() }));
       
-      // Filter requests by location
-      let nearbyRequests = allRequests;
+      let nearby = allRequests;
       if (userLocation) {
-        nearbyRequests = allRequests.filter(r => {
-          if (!r.location) return false;
-          const distance = calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng);
-          return distance !== null && distance <= 50;
-        });
-        nearbyRequests.sort((a, b) => {
-          const distA = calculateDistance(userLocation.lat, userLocation.lng, a.location?.lat, a.location?.lng) || 999;
-          const distB = calculateDistance(userLocation.lat, userLocation.lng, b.location?.lat, b.location?.lng) || 999;
-          return distA - distB;
+        nearby = allRequests.filter(r => r.location && calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng) <= 50);
+        nearby.sort((a,b) => {
+          const da = calculateDistance(userLocation.lat, userLocation.lng, a.location?.lat, a.location?.lng) || 999;
+          const db = calculateDistance(userLocation.lat, userLocation.lng, b.location?.lat, b.location?.lng) || 999;
+          return da - db;
         });
       }
       
       const container = document.getElementById('requestsList');
-      if (nearbyRequests.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 20px;">No requests found nearby. Post a quick request!</div>';
-      } else {
-        container.innerHTML = nearbyRequests.map(r => {
-          const distance = userLocation && r.location ? 
-            calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng).toFixed(1) : null;
-          return `
-            <div class="item-card">
-              <strong>${escapeHtml(r.name)}</strong><br>
-              <small>⚠️ Urgency: ${r.urgency.toUpperCase()} | Need by: ${r.deadline || 'ASAP'}</small><br>
-              <small>⏰ Available: ${escapeHtml(r.availability)}</small>
-              ${distance ? `<div class="distance-badge">📍 ${distance} km away</div>` : ''}
-              ${r.reason ? `<small><br>💬 "${escapeHtml(r.reason)}"</small>` : ''}
-              ${r.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">🔴 Urgent Need</div>' : ''}
-              <div style="font-size: 0.7rem; color: #4ECDC4; margin-top: 4px;">👤 ${escapeHtml(r.userEmail?.split('@')[0])}</div>
-              ${r.userId === currentUser?.uid ? '<div style="margin-top: 8px; color: #4ECDC4;"><i class="fas fa-check"></i> Your request</div>' : ''}
-            </div>
-          `;
+      if (nearby.length === 0) container.innerHTML = '<div style="text-align:center;padding:20px;">No requests nearby. Post a quick request!</div>';
+      else {
+        container.innerHTML = nearby.map(r => {
+          const dist = userLocation && r.location ? calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng).toFixed(1) : null;
+          return `<div class="item-card">
+            <strong>${escapeHtml(r.name)}</strong><br>
+            <small>⚠️ ${r.urgency.toUpperCase()} urgency</small><br>
+            <small>⏰ ${escapeHtml(r.availability)}</small>
+            ${dist ? `<div class="distance-badge">📍 ${dist} km away</div>` : ''}
+            ${r.reason ? `<small>💬 "${escapeHtml(r.reason)}"</small><br>` : ''}
+            ${r.urgency === 'high' ? '<div style="color:#DC2626;font-size:0.7rem;">🔴 Urgent Need</div>' : ''}
+            <div style="font-size:0.7rem;color:#4ECDC4;margin-top:4px;">👤 ${escapeHtml(r.userName || r.userEmail?.split('@')[0])}</div>
+            ${r.userId === currentUser?.uid ? '<div style="margin-top:8px;color:#4ECDC4;"><i class="fas fa-check"></i> Your request</div>' : ''}
+          </div>`;
         }).join('');
       }
     });
@@ -1108,300 +778,147 @@
     document.getElementById('enableLocationBtn')?.addEventListener('click', enableLocation);
   }
 
-  async function requestItem(donationId, donorId, donorName, itemName) {
-    if (!currentUser) {
-      showToast("Please login first");
-      return;
-    }
-    if (currentUser.uid === donorId) {
-      showToast("You cannot request your own item");
-      return;
-    }
-    
-    try {
-      await updateDoc(doc(db, "donations", donationId), { 
-        status: "requested",
-        requestedBy: currentUser.uid,
-        requestedAt: serverTimestamp()
-      });
-      
-      const chatId = await getOrCreateChatRoom(donorId, donorName, donationId, itemName);
-      await sendMessage(chatId, `Hi! I'm interested in your ${itemName}. When can I pick it up?`);
-      
-      showToast(`✓ Request sent! You can now chat with ${donorName}`);
-      document.querySelector('[data-page="chats"]').click();
-    } catch(err) {
-      showToast("Error: " + err.message);
-    }
-  }
-
-  async function getOrCreateChatRoom(otherUserId, otherUserName, matchId, itemName) {
-    if (!currentUser) return null;
-    
-    const chatId = [currentUser.uid, otherUserId].sort().join('_');
-    const chatsQuery = query(collection(db, "chats"), where("chatId", "==", chatId));
-    const chatSnapshot = await getDocs(chatsQuery);
-    
-    if (chatSnapshot.empty) {
-      await addDoc(collection(db, "chats"), {
-        chatId: chatId,
-        participants: [currentUser.uid, otherUserId],
-        participantNames: {
-          [currentUser.uid]: currentUser.email.split('@')[0],
-          [otherUserId]: otherUserName
-        },
-        matchId: matchId,
-        itemName: itemName,
-        lastMessage: "Chat started",
-        lastMessageTime: serverTimestamp(),
-        createdAt: serverTimestamp()
-      });
-    }
-    
-    return chatId;
-  }
-
-  // Donate Page
-  function renderDonatePage() {
-    selectedImageFile = null;
-    const availabilityOptionsHtml = availabilityOptions.map(opt => 
-      `<option value="${opt.value}">${opt.label}</option>`
-    ).join('');
-    
+  // RENDER CHATS
+  async function renderChats() {
     const content = document.getElementById('contentArea');
-    content.innerHTML = `
-      <div class="card">
-        <div class="card-title"><i class="fas fa-gift"></i> Donate an Item</div>
-        ${!userLocation ? '<div class="location-banner" style="margin-bottom: 16px;"><i class="fas fa-map-marker-alt"></i> Location needed to share with nearby people</div>' : ''}
-        <div class="form-group">
-          <label>📸 Product Image (Optional)</label>
-          <div class="image-upload-area" id="imageUploadArea">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Tap to add photo</p>
-            <input type="file" id="imageInput" accept="image/*" style="display: none;">
-          </div>
-          <img id="imagePreview" class="image-preview">
-        </div>
-        <div class="form-group">
-          <label>Item Name *</label>
-          <input type="text" id="itemName" placeholder="e.g., Fresh Milk, Bread, Vegetables">
-        </div>
-        <div class="form-group">
-          <label>Expiry Date *</label>
-          <input type="date" id="expiryDate">
-        </div>
-        <div class="form-group">
-          <label>Urgency Level</label>
-          <select id="urgency">
-            <option value="low">🟢 Low - Still fresh (3+ days left)</option>
-            <option value="medium">🟡 Medium - Expiring soon (1-2 days left)</option>
-            <option value="high">🔴 High - Expiring today/tomorrow</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>⏰ Pickup Availability Time *</label>
-          <select id="availability">
-            ${availabilityOptionsHtml}
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Additional Notes (Optional)</label>
-          <textarea id="notes" placeholder="Any special instructions for pickup..."></textarea>
-        </div>
-        <button class="btn btn-primary" id="submitDonationBtn"><i class="fas fa-share-alt"></i> Donate & Share with Nearby</button>
-      </div>
-    `;
+    content.innerHTML = `<div class="card"><div class="card-title"><i class="fas fa-comments"></i> Your Conversations</div><div id="chatsList">Loading...</div></div>`;
     
-    const uploadArea = document.getElementById('imageUploadArea');
-    const imageInput = document.getElementById('imageInput');
-    const imagePreview = document.getElementById('imagePreview');
-    
-    uploadArea.addEventListener('click', () => imageInput.click());
-    imageInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        selectedImageFile = file;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          imagePreview.src = e.target.result;
-          imagePreview.classList.add('active');
-        };
-        reader.readAsDataURL(file);
+    const chatsQuery = query(collection(db, "chats"), orderBy("lastMessageTime", "desc"));
+    onSnapshot(chatsQuery, (snapshot) => {
+      const chats = [];
+      snapshot.forEach(doc => {
+        const chat = doc.data();
+        if (chat.participants.includes(currentUser?.uid)) chats.push({ id: doc.id, ...chat });
+      });
+      const container = document.getElementById('chatsList');
+      if (chats.length === 0) container.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-comments" style="font-size:3rem;color:#9CA3AF;"></i><p>No chats yet. Request an item to start!</p></div>';
+      else {
+        container.innerHTML = chats.map(chat => {
+          const otherId = chat.participants.find(p => p !== currentUser?.uid);
+          const otherName = chat.participantNames[otherId] || 'User';
+          return `<div class="chat-list-item" data-chat-id="${chat.chatId}" data-other-name="${otherName}" data-other-id="${otherId}" data-item-name="${chat.itemName || 'Item'}" data-donation-id="${chat.donationId || ''}">
+            <div class="chat-avatar"><i class="fas fa-user"></i></div>
+            <div class="chat-info"><div class="chat-name">${escapeHtml(otherName)}</div><div class="chat-last-message">${escapeHtml(chat.lastMessage || 'Say hello!')}</div><div style="font-size:0.65rem;color:#FF6B6B;">${escapeHtml(chat.itemName || '')}</div></div>
+            <div class="chat-time">${chat.lastMessageTime ? new Date(chat.lastMessageTime.toDate()).toLocaleDateString() : 'New'}</div>
+          </div>`;
+        }).join('');
+        document.querySelectorAll('.chat-list-item').forEach(item => {
+          item.addEventListener('click', () => openChat(item.dataset.chatId, item.dataset.otherName, item.dataset.otherId, item.dataset.itemName, item.dataset.donationId));
+        });
       }
     });
+  }
+
+  // DONATE PAGE
+  function renderDonatePage() {
+    selectedImageFile = null;
+    const content = document.getElementById('contentArea');
+    content.innerHTML = `
+      <div class="card"><div class="card-title"><i class="fas fa-gift"></i> Donate an Item</div>
+      ${!userLocation ? '<div class="location-banner" style="margin-bottom:16px;"><i class="fas fa-map-marker-alt"></i> Enable location to share</div>' : ''}
+      <div class="form-group"><div class="image-upload-area" id="uploadArea"><i class="fas fa-cloud-upload-alt"></i><p>Tap to add photo</p><input type="file" id="imageInput" accept="image/*" style="display:none;"></div><img id="imagePreview" class="image-preview"></div>
+      <div class="form-group"><label>Item Name *</label><input type="text" id="itemName" placeholder="e.g., Fresh Milk, Bread"></div>
+      <div class="form-group"><label>Expiry Date *</label><input type="date" id="expiryDate"></div>
+      <div class="form-group"><label>Urgency</label><select id="urgency"><option value="low">🟢 Low - 3+ days left</option><option value="medium">🟡 Medium - 1-2 days left</option><option value="high">🔴 High - Today/tomorrow</option></select></div>
+      <div class="form-group"><label>Availability</label><select id="availability">${availabilityOptions.map(opt => `<option>${opt}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Notes</label><textarea id="notes" placeholder="Pickup instructions..."></textarea></div>
+      <button class="btn btn-primary" id="submitBtn"><i class="fas fa-share-alt"></i> Donate & Share</button></div>`;
     
-    document.getElementById('submitDonationBtn').addEventListener('click', async () => {
+    document.getElementById('uploadArea').addEventListener('click', () => document.getElementById('imageInput').click());
+    document.getElementById('imageInput').addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        selectedImageFile = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => { document.getElementById('imagePreview').src = e.target.result; document.getElementById('imagePreview').classList.add('active'); };
+        reader.readAsDataURL(selectedImageFile);
+      }
+    });
+    document.getElementById('submitBtn').addEventListener('click', async () => {
       const name = document.getElementById('itemName').value;
       const expiry = document.getElementById('expiryDate').value;
-      if (!name || !expiry) {
-        showToast("Please fill required fields");
-        return;
-      }
-      await addDonation(name, expiry, document.getElementById('availability').value,
-        document.getElementById('urgency').value, document.getElementById('notes').value, selectedImageFile);
+      if (!name || !expiry) { showToast("Fill required fields"); return; }
+      await donateItem(name, expiry, document.getElementById('availability').value, document.getElementById('urgency').value, document.getElementById('notes').value, selectedImageFile);
       document.querySelector('[data-page="home"]').click();
     });
   }
 
-  // Quick Request Page
+  // QUICK REQUEST PAGE
   function renderQuickRequestPage() {
-    const availabilityOptionsHtml = availabilityOptions.map(opt => 
-      `<option value="${opt.value}">${opt.label}</option>`
-    ).join('');
-    
     const content = document.getElementById('contentArea');
     content.innerHTML = `
-      <div class="card">
-        <div class="card-title"><i class="fas fa-bolt"></i> Quick Request - Get Matched Instantly</div>
-        <p style="font-size: 0.8rem; color: #6B7280; margin-bottom: 16px;">Post what you need and nearby donors will see your request!</p>
-        ${!userLocation ? '<div class="location-banner" style="margin-bottom: 16px;"><i class="fas fa-map-marker-alt"></i> Location needed to find nearby donors</div>' : ''}
-        <div class="form-group">
-          <label>What do you need? *</label>
-          <input type="text" id="requestName" placeholder="e.g., Milk, Medicine, Baby Food">
-        </div>
-        <div class="form-group">
-          <label>How urgent is this?</label>
-          <select id="urgencyLevel">
-            <option value="low">🟢 Low - Can wait 3+ days</option>
-            <option value="medium">🟡 Medium - Need within 2 days</option>
-            <option value="high">🔴 High - Need today/tomorrow</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>⏰ When can you pickup? *</label>
-          <select id="pickupAvailability">
-            ${availabilityOptionsHtml}
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Why do you need this? (Optional)</label>
-          <textarea id="reason" placeholder="Brief reason helps donors understand your need"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Need by date (Optional)</label>
-          <input type="date" id="deadline">
-        </div>
-        <button class="btn btn-primary" id="submitQuickRequestBtn"><i class="fas fa-magic"></i> Post & Find Nearby Donors</button>
-      </div>
-    `;
+      <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> Quick Request</div>
+      <p style="font-size:0.8rem;color:#6B7280;margin-bottom:16px;">Post what you need - nearby donors will see it instantly!</p>
+      ${!userLocation ? '<div class="location-banner" style="margin-bottom:16px;"><i class="fas fa-map-marker-alt"></i> Enable location to find donors</div>' : ''}
+      <div class="form-group"><label>What do you need? *</label><input type="text" id="requestName" placeholder="e.g., Milk, Medicine"></div>
+      <div class="form-group"><label>Urgency</label><select id="urgencyLevel"><option value="low">🟢 Low - Can wait</option><option value="medium">🟡 Medium - Need within 2 days</option><option value="high">🔴 High - Need today/tomorrow</option></select></div>
+      <div class="form-group"><label>Availability</label><select id="pickupAvailability">${availabilityOptions.map(opt => `<option>${opt}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Reason</label><textarea id="reason" placeholder="Brief reason..."></textarea></div>
+      <button class="btn btn-primary" id="submitRequestBtn"><i class="fas fa-magic"></i> Post Request</button></div>`;
     
-    document.getElementById('submitQuickRequestBtn').addEventListener('click', async () => {
+    document.getElementById('submitRequestBtn').addEventListener('click', async () => {
       const name = document.getElementById('requestName').value;
-      if (!name) {
-        showToast("Please enter what you need");
-        return;
-      }
-      await addQuickRequest(name, document.getElementById('urgencyLevel').value,
-        document.getElementById('pickupAvailability').value, document.getElementById('reason').value);
+      if (!name) { showToast("Enter what you need"); return; }
+      await quickRequest(name, document.getElementById('urgencyLevel').value, document.getElementById('pickupAvailability').value, document.getElementById('reason').value);
       document.querySelector('[data-page="home"]').click();
     });
   }
 
   function renderProfilePage() {
-    if (!currentUser) return showToast("Please login");
     const content = document.getElementById('contentArea');
     content.innerHTML = `
-      <div class="card">
-        <div class="card-title"><i class="fas fa-user-circle"></i> My Profile</div>
-        <div style="text-align: center;">
-          <i class="fas fa-user-circle" style="font-size: 4rem; color: #FF6B6B;"></i>
-          <h3>${escapeHtml(currentUser.email)}</h3>
-        </div>
-        ${userLocation ? 
-          `<div><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Location: ${userLocation.lat.toFixed(4)}°, ${userLocation.lng.toFixed(4)}°</div>
-           <div style="margin-top: 8px;"><i class="fas fa-globe"></i> Showing items within 50km</div>` : 
-          '<button class="btn btn-primary" id="enableProfileLocation">Enable Location to See Nearby Items</button>'}
-        <button class="btn btn-outline" id="logoutBtn" style="margin-top: 16px;">Logout</button>
-      </div>
-    `;
+      <div class="card"><div class="card-title"><i class="fas fa-user-circle"></i> My Profile</div>
+      <div style="text-align:center;"><i class="fas fa-user-circle" style="font-size:4rem;color:#FF6B6B;"></i><h3>${escapeHtml(currentUser?.email || 'User')}</h3></div>
+      ${userLocation ? `<div><i class="fas fa-check-circle" style="color:#2E7D32;"></i> Location active</div>` : '<button class="btn btn-primary" id="enableProfileLocation">Enable Location</button>'}
+      <button class="btn btn-outline" id="logoutBtn" style="margin-top:16px;">Logout</button></div>`;
     document.getElementById('enableProfileLocation')?.addEventListener('click', enableLocation);
     document.getElementById('logoutBtn')?.addEventListener('click', () => signOut(auth));
   }
 
-  function formatDate(dateStr) {
-    if (!dateStr) return 'Soon';
-    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  }
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
+  function formatDate(dateStr) { return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m]; }); }
 
   function renderCurrentPage() {
-    if (!currentUser) {
-      renderLoginPage();
-      return;
-    }
-    
+    if (!currentUser) { renderLoginPage(); return; }
     switch(currentPage) {
       case 'home': renderHomePage(); break;
       case 'donate': renderDonatePage(); break;
       case 'quick-request': renderQuickRequestPage(); break;
-      case 'chats': renderChatList(); break;
+      case 'chats': renderChats(); break;
       case 'profile': renderProfilePage(); break;
     }
   }
 
   function renderLoginPage() {
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `
-      <div class="card">
-        <div class="card-title"><i class="fas fa-lock"></i> Welcome to ReLife AI</div>
-        <div class="form-group"><input type="email" id="loginEmail" placeholder="Email"></div>
-        <div class="form-group"><input type="password" id="loginPassword" placeholder="Password"></div>
-        <button class="btn btn-primary" id="loginBtn" style="margin-bottom: 12px;">Login</button>
-        <button class="btn btn-outline" id="signupBtn">Sign Up</button>
-      </div>
-    `;
-    
+    document.getElementById('contentArea').innerHTML = `
+      <div class="card"><div class="card-title"><i class="fas fa-lock"></i> Welcome</div>
+      <div class="form-group"><input type="email" id="loginEmail" placeholder="Email"></div>
+      <div class="form-group"><input type="password" id="loginPassword" placeholder="Password"></div>
+      <button class="btn btn-primary" id="loginBtn" style="margin-bottom:12px;">Login</button>
+      <button class="btn btn-outline" id="signupBtn">Sign Up</button></div>`;
     document.getElementById('loginBtn').addEventListener('click', async () => {
-      try {
-        await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value);
-        showToast("Welcome back!");
-      } catch(err) { showToast(err.message); }
+      try { await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); showToast("Welcome!"); } 
+      catch(err) { showToast(err.message); }
     });
-    
     document.getElementById('signupBtn').addEventListener('click', async () => {
-      try {
-        await createUserWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value);
-        showToast("Account created!");
-      } catch(err) { showToast(err.message); }
+      try { await createUserWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); showToast("Account created!"); } 
+      catch(err) { showToast(err.message); }
     });
   }
 
-  // Navigation
+  // NAVIGATION
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentPage = btn.dataset.page;
-      
-      document.getElementById('appHeader').innerHTML = `
-        <h1><i class="fas fa-leaf"></i> ReLife AI</h1>
-        <div class="subtitle">Smart Community Expiry Rescue | Location Based</div>
-      `;
-      
+      document.getElementById('appHeader').innerHTML = `<h1><i class="fas fa-leaf"></i> ReLife AI</h1><div class="subtitle">Smart Community Expiry Rescue | Real-time</div>`;
       renderCurrentPage();
     });
   });
 
-  onAuthStateChanged(auth, (user) => {
-    currentUser = user;
-    renderCurrentPage();
-  });
-
-  document.getElementById('closeQrBtn')?.addEventListener('click', () => {
-    document.getElementById('qrModal').classList.remove('active');
-  });
-  
-  document.getElementById('closeScannerBtn')?.addEventListener('click', async () => {
-    document.getElementById('scannerModal').classList.remove('active');
-    if (html5QrScanner) await html5QrScanner.stop();
-    document.getElementById('scanResult').innerHTML = '';
-  });
+  onAuthStateChanged(auth, (user) => { currentUser = user; renderCurrentPage(); });
+  document.getElementById('closeQrBtn')?.addEventListener('click', () => document.getElementById('qrModal').classList.remove('active'));
+  document.getElementById('closeScannerBtn')?.addEventListener('click', async () => { document.getElementById('scannerModal').classList.remove('active'); if (html5QrScanner) await html5QrScanner.stop(); document.getElementById('scanResult').innerHTML = ''; });
 </script>
 </body>
 </html>
