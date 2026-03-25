@@ -12,388 +12,62 @@
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #1A2C3E;
-    }
-
-    .app-wrapper {
-      max-width: 450px;
-      margin: 0 auto;
-      background: #F5F7FA;
-      min-height: 100vh;
-      position: relative;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    }
-
-    .app-header {
-      background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #96CEB4 75%, #FFEAA7 100%);
-      color: white;
-      padding: 20px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .app-header h1 {
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .subtitle {
-      font-size: 0.75rem;
-      margin-top: 5px;
-      opacity: 0.9;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: 450px;
-      width: 100%;
-      background: white;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 20px 20px;
-      border-top: 1px solid #E5E9F0;
-      z-index: 100;
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #9CA3AF;
-      font-size: 0.7rem;
-      transition: all 0.3s ease;
-    }
-
-    .nav-item i {
-      font-size: 1.3rem;
-    }
-
-    .nav-item.active {
-      color: #FF6B6B;
-    }
-
-    .content-area {
-      padding: 20px;
-      padding-bottom: 80px;
-      margin-bottom: 60px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn {
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.2s;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #FF6B6B, #FF4757);
-      color: white;
-    }
-
-    .btn-primary:active {
-      transform: scale(0.98);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid #FF6B6B;
-      color: #FF6B6B;
-    }
-
-    .btn-success {
-      background: linear-gradient(135deg, #4ECDC4, #45B7D1);
-      color: white;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-      font-size: 0.85rem;
-      color: #374151;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #E5E9F0;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .image-upload-area {
-      border: 2px dashed #E5E9F0;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .image-upload-area:hover {
-      border-color: #FF6B6B;
-      background: #FFF5F5;
-    }
-
-    .image-preview {
-      width: 100%;
-      max-height: 150px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-top: 12px;
-      display: none;
-    }
-
-    .image-preview.active {
-      display: block;
-    }
-
-    .location-banner {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: white;
-    }
-
-    .distance-badge {
-      background: rgba(255,255,255,0.2);
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      display: inline-block;
-      margin-top: 6px;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #1F2937;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      z-index: 1000;
-      transition: 0.3s;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    .item-card {
-      border: 1px solid #E5E9F0;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 12px;
-      transition: all 0.2s;
-      background: white;
-    }
-
-    .item-card:hover {
-      transform: translateX(5px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      height: calc(100vh - 180px);
-    }
-
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .message {
-      max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 18px;
-      word-wrap: break-word;
-    }
-
-    .message-sent {
-      background: linear-gradient(135deg, #FF6B6B, #FF4757);
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-
-    .message-received {
-      background: #E5E9F0;
-      color: #1A2C3E;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-
-    .message-time {
-      font-size: 0.65rem;
-      margin-top: 4px;
-      opacity: 0.7;
-    }
-
-    .chat-input-area {
-      padding: 16px;
-      background: white;
-      border-top: 1px solid #E5E9F0;
-      display: flex;
-      gap: 10px;
-    }
-
-    .chat-input-area input {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #E5E9F0;
-      border-radius: 25px;
-    }
-
-    .chat-input-area button {
-      width: auto;
-      padding: 12px 20px;
-      background: linear-gradient(135deg, #FF6B6B, #FF4757);
-      color: white;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-    }
-
-    .chat-list-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-bottom: 1px solid #E5E9F0;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .chat-list-item:hover {
-      background: #F9FAFB;
-    }
-
-    .chat-avatar {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #FF6B6B, #FF4757);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .back-button {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      color: white;
-      margin-right: 10px;
-    }
-
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      visibility: hidden;
-      opacity: 0;
-      transition: 0.3s;
-    }
-
-    .modal.active {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 24px;
-      padding: 24px;
-      max-width: 90%;
-      width: 320px;
-      text-align: center;
-    }
-
-    @media (max-width: 450px) {
-      .app-wrapper {
-        width: 100%;
-      }
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .app-wrapper { max-width: 450px; margin: 0 auto; background: #F5F7FA; min-height: 100vh; position: relative; }
+    .app-header { background: linear-gradient(135deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7); color: white; padding: 20px; position: sticky; top: 0; z-index: 100; }
+    .app-header h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .subtitle { font-size: 0.75rem; margin-top: 5px; opacity: 0.9; }
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); max-width: 450px; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 20px 20px; border-top: 1px solid #E5E9F0; z-index: 100; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; color: #9CA3AF; font-size: 0.7rem; transition: all 0.3s ease; }
+    .nav-item i { font-size: 1.3rem; }
+    .nav-item.active { color: #FF6B6B; }
+    .content-area { padding: 20px; padding-bottom: 80px; margin-bottom: 60px; }
+    .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .btn { padding: 12px; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; width: 100%; transition: all 0.2s; }
+    .btn-primary { background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; }
+    .btn-outline { background: transparent; border: 2px solid #FF6B6B; color: #FF6B6B; }
+    .btn-success { background: linear-gradient(135deg, #4ECDC4, #45B7D1); color: white; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; color: #374151; }
+    input, textarea, select { width: 100%; padding: 12px; border: 1px solid #E5E9F0; border-radius: 12px; font-size: 0.9rem; font-family: 'Inter', sans-serif; }
+    .image-upload-area { border: 2px dashed #E5E9F0; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+    .image-upload-area:hover { border-color: #FF6B6B; background: #FFF5F5; }
+    .image-preview { width: 100%; max-height: 150px; object-fit: cover; border-radius: 12px; margin-top: 12px; display: none; }
+    .image-preview.active { display: block; }
+    .location-banner { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; color: white; }
+    .distance-badge { background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; display: inline-block; margin-top: 6px; }
+    .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1F2937; color: white; padding: 12px 20px; border-radius: 40px; font-size: 0.85rem; z-index: 1000; transition: 0.3s; opacity: 0; pointer-events: none; }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .item-card { border: 1px solid #E5E9F0; border-radius: 12px; padding: 12px; margin-bottom: 12px; transition: all 0.2s; background: white; }
+    .item-card:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 180px); }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .message { max-width: 80%; padding: 10px 14px; border-radius: 18px; word-wrap: break-word; }
+    .message-sent { background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .message-received { background: #E5E9F0; color: #1A2C3E; align-self: flex-start; border-bottom-left-radius: 4px; }
+    .message-time { font-size: 0.65rem; margin-top: 4px; opacity: 0.7; }
+    .chat-input-area { padding: 16px; background: white; border-top: 1px solid #E5E9F0; display: flex; gap: 10px; }
+    .chat-input-area input { flex: 1; padding: 12px; border: 1px solid #E5E9F0; border-radius: 25px; }
+    .chat-input-area button { width: auto; padding: 12px 20px; background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; border: none; border-radius: 25px; cursor: pointer; }
+    .chat-list-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid #E5E9F0; cursor: pointer; transition: background 0.2s; }
+    .chat-list-item:hover { background: #F9FAFB; }
+    .chat-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #FF6B6B, #FF4757); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+    .back-button { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: white; margin-right: 10px; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; visibility: hidden; opacity: 0; transition: 0.3s; }
+    .modal.active { visibility: visible; opacity: 1; }
+    .modal-content { background: white; border-radius: 24px; padding: 24px; max-width: 90%; width: 320px; text-align: center; }
+    @media (max-width: 450px) { .app-wrapper { width: 100%; } }
   </style>
 </head>
 <body>
 <div class="app-wrapper">
   <div class="app-header" id="appHeader">
     <h1><i class="fas fa-leaf"></i> ReLife AI</h1>
-    <div class="subtitle">Smart Community Expiry Rescue | Real-time Sharing</div>
+    <div class="subtitle">Smart Community Expiry Rescue | 50km Radius Matching</div>
   </div>
-
   <div class="content-area" id="contentArea"></div>
-
   <div class="bottom-nav">
     <button class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
     <button class="nav-item" data-page="donate"><i class="fas fa-gift"></i><span>Donate</span></button>
@@ -402,32 +76,14 @@
     <button class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></button>
   </div>
 </div>
-
 <div id="toast" class="toast"></div>
-
-<!-- QR Modal -->
-<div id="qrModal" class="modal">
-  <div class="modal-content">
-    <h3><i class="fas fa-qrcode"></i> Pickup QR Code</h3>
-    <div id="qrCodeContainer"></div>
-    <button class="btn btn-primary" id="closeQrBtn">Close</button>
-  </div>
-</div>
-
-<!-- Scanner Modal -->
-<div id="scannerModal" class="modal">
-  <div class="modal-content">
-    <h3><i class="fas fa-camera"></i> Scan QR Code</h3>
-    <div id="qr-reader"></div>
-    <div id="scanResult"></div>
-    <button class="btn btn-secondary" id="closeScannerBtn">Close</button>
-  </div>
-</div>
+<div id="qrModal" class="modal"><div class="modal-content"><h3>Pickup QR Code</h3><div id="qrCodeContainer"></div><button class="btn btn-primary" id="closeQrBtn">Close</button></div></div>
+<div id="scannerModal" class="modal"><div class="modal-content"><h3>Scan QR Code</h3><div id="qr-reader"></div><div id="scanResult"></div><button class="btn btn-secondary" id="closeScannerBtn">Close</button></div></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, where, getDocs, limit } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
 
   const firebaseConfig = {
@@ -447,53 +103,38 @@
   let currentUser = null;
   let currentPage = 'home';
   let userLocation = null;
+  let selectedImageFile = null;
+  let html5QrScanner = null;
   let unsubscribeDonations = null;
   let unsubscribeRequests = null;
   let unsubscribeMessages = null;
-  let selectedImageFile = null;
-  let html5QrScanner = null;
-  let currentMatchId = null;
 
-  const availabilityOptions = [
-    "🌅 Early Morning (5-8 AM)",
-    "☀️ Morning (8 AM-12 PM)",
-    "🌤️ Afternoon (12-4 PM)",
-    "🌙 Evening (4-7 PM)",
-    "⭐ Night (7-10 PM)",
-    "🕒 Flexible"
-  ];
+  const availabilityOptions = ["🌅 Early Morning (5-8 AM)", "☀️ Morning (8 AM-12 PM)", "🌤️ Afternoon (12-4 PM)", "🌙 Evening (4-7 PM)", "⭐ Night (7-10 PM)", "🕒 Flexible"];
 
-  function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
-  }
+  function showToast(msg) { const toast = document.getElementById('toast'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2500); }
 
   function calculateDistance(lat1, lon1, lat2, lon2) {
-    if (!lat1 || !lat2) return null;
+    if (!lat1 || !lat2 || !lon1 || !lon2) return null;
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
               Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
               Math.sin(dLon/2) * Math.sin(dLon/2);
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
   }
 
   function enableLocation() {
-    if (!navigator.geolocation) {
-      showToast("Geolocation not supported");
-      return;
-    }
+    if (!navigator.geolocation) { showToast("Geolocation not supported"); return; }
     showToast("Getting your location...");
     navigator.geolocation.getCurrentPosition(
       (position) => {
         userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
-        showToast(`📍 Location set! Showing nearby items.`);
+        showToast(`📍 Location set! You can now donate/request within 50km radius.`);
         renderCurrentPage();
       },
-      () => showToast("Please enable location")
+      () => showToast("Please enable location to use the app")
     );
   }
 
@@ -510,10 +151,7 @@
     if (!userLocation) { showToast("Enable location first"); enableLocation(); return; }
     
     let imageUrl = null;
-    if (imageFile) {
-      showToast("Uploading image...");
-      imageUrl = await uploadImage(imageFile);
-    }
+    if (imageFile) { showToast("Uploading image..."); imageUrl = await uploadImage(imageFile); }
     
     try {
       await addDoc(collection(db, "donations"), {
@@ -525,7 +163,7 @@
         createdAt: serverTimestamp(),
         status: "available"
       });
-      showToast(`✓ "${name}" donated! Others can see it now.`);
+      showToast(`✓ "${name}" donated! Others can request it now.`);
       return true;
     } catch(err) { showToast("Error: " + err.message); return false; }
   }
@@ -545,15 +183,26 @@
         createdAt: serverTimestamp(),
         status: "pending"
       });
-      showToast(`✓ "${name}" request posted! Donors near you will see it.`);
+      showToast(`✓ "${name}" request posted! Donors can help you.`);
       return true;
     } catch(err) { showToast("Error: " + err.message); return false; }
   }
 
-  // REQUEST ITEM (from donation)
-  async function requestItem(donationId, donorId, donorName, itemName) {
+  // REQUEST ITEM - WITH LOCATION CHECK (50km)
+  async function requestItem(donationId, donorId, donorName, itemName, donorLocation) {
     if (!currentUser) { showToast("Please login"); return; }
-    if (currentUser.uid === donorId) { showToast("Cannot request own item"); return; }
+    if (currentUser.uid === donorId) { showToast("Cannot request your own item"); return; }
+    if (!userLocation) { showToast("Enable location to request items"); enableLocation(); return; }
+    
+    // Check distance between users
+    if (donorLocation && userLocation) {
+      const distance = calculateDistance(userLocation.lat, userLocation.lng, donorLocation.lat, donorLocation.lng);
+      if (distance > 50) {
+        showToast(`❌ Donor is ${distance.toFixed(1)}km away. Only matches within 50km are allowed.`);
+        return;
+      }
+      showToast(`✅ Donor is ${distance.toFixed(1)}km away. Within 50km radius! Opening chat...`);
+    }
     
     try {
       await updateDoc(doc(db, "donations", donationId), { status: "requested", requestedBy: currentUser.uid });
@@ -566,12 +215,15 @@
           chatId: chatId,
           participants: [currentUser.uid, donorId],
           participantNames: {
-            [currentUser.uid]: currentUser.userName || currentUser.email.split('@')[0],
+            [currentUser.uid]: currentUser.email.split('@')[0],
             [donorId]: donorName
           },
           itemName: itemName,
           donationId: donationId,
-          lastMessage: `🎉 ${currentUser.email.split('@')[0]} requested your ${itemName}!`,
+          donorLocation: donorLocation,
+          requesterLocation: userLocation,
+          distance: donorLocation && userLocation ? calculateDistance(userLocation.lat, userLocation.lng, donorLocation.lat, donorLocation.lng) : null,
+          lastMessage: `${currentUser.email.split('@')[0]} requested your ${itemName}!`,
           lastMessageTime: serverTimestamp(),
           createdAt: serverTimestamp()
         });
@@ -605,15 +257,14 @@
   }
 
   // SHOW QR CODE
-  function showQRCode(matchId, itemName) {
-    const qrData = JSON.stringify({ matchId, itemName, timestamp: Date.now() });
+  function showQRCode(donationId, itemName) {
+    const qrData = JSON.stringify({ donationId, itemName, timestamp: Date.now() });
     document.getElementById('qrCodeContainer').innerHTML = '';
     new QRCode(document.getElementById('qrCodeContainer'), {
       text: qrData, width: 200, height: 200, colorDark: "#FF6B6B"
     });
     document.getElementById('qrModal').classList.add('active');
-    currentMatchId = matchId;
-    showToast("QR Code ready! Share with receiver.");
+    showToast("QR Code ready! Share with receiver for pickup confirmation.");
   }
 
   // SCAN QR
@@ -630,7 +281,7 @@
               <button id="confirmPickupBtn" class="btn btn-success" style="margin-top:8px;">Confirm Pickup</button>
             </div>`;
           document.getElementById('confirmPickupBtn')?.addEventListener('click', () => {
-            showToast("🎉 Pickup confirmed! Thank you!");
+            showToast("🎉 Pickup confirmed! Thank you for reducing waste!");
             document.getElementById('scannerModal').classList.remove('active');
             if (html5QrScanner) html5QrScanner.stop();
           });
@@ -640,11 +291,11 @@
   }
 
   // OPEN CHAT
-  function openChat(chatId, otherName, otherId, itemName, donationId) {
+  function openChat(chatId, otherName, otherId, itemName, donationId, distance) {
     document.getElementById('appHeader').innerHTML = `
       <button class="back-button" onclick="location.reload()">←</button>
       <h1 style="font-size:1.2rem;"><i class="fas fa-comments"></i> Chat with ${escapeHtml(otherName)}</h1>
-      <div class="subtitle">Item: ${escapeHtml(itemName)}</div>`;
+      <div class="subtitle">${escapeHtml(itemName)} ${distance ? `| 📍 ${distance.toFixed(1)} km away` : ''}</div>`;
     
     document.getElementById('contentArea').innerHTML = `
       <div class="chat-container">
@@ -671,12 +322,24 @@
     });
     
     // Add QR button for donor
-    if (donationId) {
+    if (donationId && currentUser?.uid === otherId) {
       const btnDiv = document.createElement('div');
       btnDiv.style.padding = '12px';
       btnDiv.innerHTML = `<button class="btn btn-primary" id="qrBtn"><i class="fas fa-qrcode"></i> Generate Pickup QR Code</button>`;
       document.querySelector('.chat-input-area').before(btnDiv);
       document.getElementById('qrBtn')?.addEventListener('click', () => showQRCode(donationId, itemName));
+    }
+    
+    // Add scanner button for receiver
+    if (donationId && currentUser?.uid !== otherId) {
+      const btnDiv = document.createElement('div');
+      btnDiv.style.padding = '12px';
+      btnDiv.innerHTML = `<button class="btn btn-primary" id="scanBtn"><i class="fas fa-camera"></i> Scan Donor's QR to Confirm Pickup</button>`;
+      document.querySelector('.chat-input-area').before(btnDiv);
+      document.getElementById('scanBtn')?.addEventListener('click', async () => {
+        document.getElementById('scannerModal').classList.add('active');
+        await initScanner();
+      });
     }
     
     document.getElementById('sendMessageBtn').addEventListener('click', async () => {
@@ -689,83 +352,70 @@
     });
   }
 
-  // RENDER HOME PAGE - REAL-TIME UPDATES
+  // RENDER HOME PAGE - SHOW ALL DONATIONS AND REQUESTS
   function renderHomePage() {
     const content = document.getElementById('contentArea');
     content.innerHTML = `
-      ${!userLocation ? `<div class="location-banner"><div><i class="fas fa-map-marker-alt"></i> Enable location to see nearby items</div><button class="btn btn-primary" id="enableLocationBtn" style="width:auto;padding:8px 16px;">Enable</button></div>` : 
-        `<div class="location-banner"><div><i class="fas fa-check-circle"></i> Showing items near you</div><div style="font-size:0.7rem;">📍 ${userLocation.lat.toFixed(2)}°, ${userLocation.lng.toFixed(2)}°</div></div>`}
-      <div class="card"><div class="card-title"><i class="fas fa-gift"></i> Available Donations</div><div id="donationsList">Loading...</div></div>
-      <div class="card"><div class="card-title"><i class="fas fa-hand-holding-heart"></i> Active Requests</div><div id="requestsList">Loading...</div></div>`;
+      ${!userLocation ? `<div class="location-banner"><div><i class="fas fa-map-marker-alt"></i> Enable location to donate/request within 50km radius</div><button class="btn btn-primary" id="enableLocationBtn" style="width:auto;padding:8px 16px;">Enable</button></div>` : 
+        `<div class="location-banner"><div><i class="fas fa-check-circle"></i> Location active! You can connect with people within 50km</div><div style="font-size:0.7rem;">📍 ${userLocation.lat.toFixed(4)}°, ${userLocation.lng.toFixed(4)}°</div></div>`}
+      <div class="card"><div class="card-title"><i class="fas fa-gift"></i> Available Donations</div><div id="donationsList">Loading donations...</div></div>
+      <div class="card"><div class="card-title"><i class="fas fa-hand-holding-heart"></i> Active Requests</div><div id="requestsList">Loading requests...</div></div>`;
     
-    // REAL-TIME DONATIONS
+    // REAL-TIME DONATIONS - SHOW ALL
     if (unsubscribeDonations) unsubscribeDonations();
     const donationsQuery = query(collection(db, "donations"), where("status", "==", "available"), orderBy("createdAt", "desc"));
     unsubscribeDonations = onSnapshot(donationsQuery, (snapshot) => {
       const allDonations = [];
       snapshot.forEach(doc => allDonations.push({ id: doc.id, ...doc.data() }));
       
-      let nearby = allDonations;
-      if (userLocation) {
-        nearby = allDonations.filter(d => d.location && calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng) <= 50);
-        nearby.sort((a,b) => {
-          const da = calculateDistance(userLocation.lat, userLocation.lng, a.location?.lat, a.location?.lng) || 999;
-          const db = calculateDistance(userLocation.lat, userLocation.lng, b.location?.lat, b.location?.lng) || 999;
-          return da - db;
-        });
-      }
-      
       const container = document.getElementById('donationsList');
-      if (nearby.length === 0) container.innerHTML = '<div style="text-align:center;padding:20px;">No donations nearby. Be the first to donate!</div>';
+      if (allDonations.length === 0) container.innerHTML = '<div style="text-align:center;padding:20px;">No donations available. Be the first to donate!</div>';
       else {
-        container.innerHTML = nearby.map(d => {
-          const dist = userLocation && d.location ? calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng).toFixed(1) : null;
+        container.innerHTML = allDonations.map(d => {
+          // Calculate distance for display only
+          const dist = userLocation && d.location ? calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng) : null;
+          const isWithin50km = dist !== null && dist <= 50;
           return `<div class="item-card">
             ${d.imageUrl ? `<img src="${d.imageUrl}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px;">` : ''}
             <strong>${escapeHtml(d.name)}</strong><br>
             <small>📅 Expires: ${formatDate(d.expiryDate)}</small><br>
             <small>⏰ ${escapeHtml(d.availability)}</small>
-            ${dist ? `<div class="distance-badge">📍 ${dist} km away</div>` : ''}
+            ${dist ? `<div class="distance-badge">📍 ${dist.toFixed(1)} km away ${isWithin50km ? '✅ Within 50km' : '❌ Outside 50km'}</div>` : ''}
             ${d.urgency === 'high' ? '<div style="color:#DC2626;font-size:0.7rem;">⚠️ Urgent</div>' : ''}
             <div style="font-size:0.7rem;color:#4ECDC4;margin:4px 0;">👤 ${escapeHtml(d.userName || d.userEmail?.split('@')[0])}</div>
             ${currentUser && d.userId !== currentUser.uid ? 
-              `<button class="btn btn-primary request-btn" data-id="${d.id}" data-donor="${d.userId}" data-donor-name="${escapeHtml(d.userName || d.userEmail?.split('@')[0])}" data-name="${escapeHtml(d.name)}" style="margin-top:8px;"><i class="fas fa-comment"></i> Request & Chat</button>` : 
+              `<button class="btn btn-primary request-btn" data-id="${d.id}" data-donor="${d.userId}" data-donor-name="${escapeHtml(d.userName || d.userEmail?.split('@')[0])}" data-name="${escapeHtml(d.name)}" data-lat="${d.location?.lat || ''}" data-lng="${d.location?.lng || ''}" style="margin-top:8px;"><i class="fas fa-comment"></i> Request & Chat</button>` : 
               (d.userId === currentUser?.uid ? '<div style="margin-top:8px;color:#4ECDC4;"><i class="fas fa-check"></i> Your donation</div>' : '')}
           </div>`;
         }).join('');
+        
         document.querySelectorAll('.request-btn').forEach(btn => {
-          btn.addEventListener('click', () => requestItem(btn.dataset.id, btn.dataset.donor, btn.dataset.donorName, btn.dataset.name));
+          btn.addEventListener('click', () => {
+            const donorLocation = { lat: parseFloat(btn.dataset.lat), lng: parseFloat(btn.dataset.lng) };
+            requestItem(btn.dataset.id, btn.dataset.donor, btn.dataset.donorName, btn.dataset.name, donorLocation);
+          });
         });
       }
     });
     
-    // REAL-TIME REQUESTS
+    // REAL-TIME REQUESTS - SHOW ALL
     if (unsubscribeRequests) unsubscribeRequests();
     const requestsQuery = query(collection(db, "requests"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
     unsubscribeRequests = onSnapshot(requestsQuery, (snapshot) => {
       const allRequests = [];
       snapshot.forEach(doc => allRequests.push({ id: doc.id, ...doc.data() }));
       
-      let nearby = allRequests;
-      if (userLocation) {
-        nearby = allRequests.filter(r => r.location && calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng) <= 50);
-        nearby.sort((a,b) => {
-          const da = calculateDistance(userLocation.lat, userLocation.lng, a.location?.lat, a.location?.lng) || 999;
-          const db = calculateDistance(userLocation.lat, userLocation.lng, b.location?.lat, b.location?.lng) || 999;
-          return da - db;
-        });
-      }
-      
       const container = document.getElementById('requestsList');
-      if (nearby.length === 0) container.innerHTML = '<div style="text-align:center;padding:20px;">No requests nearby. Post a quick request!</div>';
+      if (allRequests.length === 0) container.innerHTML = '<div style="text-align:center;padding:20px;">No requests yet. Post a quick request!</div>';
       else {
-        container.innerHTML = nearby.map(r => {
-          const dist = userLocation && r.location ? calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng).toFixed(1) : null;
+        container.innerHTML = allRequests.map(r => {
+          const dist = userLocation && r.location ? calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng) : null;
+          const isWithin50km = dist !== null && dist <= 50;
           return `<div class="item-card">
             <strong>${escapeHtml(r.name)}</strong><br>
             <small>⚠️ ${r.urgency.toUpperCase()} urgency</small><br>
             <small>⏰ ${escapeHtml(r.availability)}</small>
-            ${dist ? `<div class="distance-badge">📍 ${dist} km away</div>` : ''}
+            ${dist ? `<div class="distance-badge">📍 ${dist.toFixed(1)} km away ${isWithin50km ? '✅ Within 50km' : '❌ Outside 50km'}</div>` : ''}
             ${r.reason ? `<small>💬 "${escapeHtml(r.reason)}"</small><br>` : ''}
             ${r.urgency === 'high' ? '<div style="color:#DC2626;font-size:0.7rem;">🔴 Urgent Need</div>' : ''}
             <div style="font-size:0.7rem;color:#4ECDC4;margin-top:4px;">👤 ${escapeHtml(r.userName || r.userEmail?.split('@')[0])}</div>
@@ -796,14 +446,14 @@
         container.innerHTML = chats.map(chat => {
           const otherId = chat.participants.find(p => p !== currentUser?.uid);
           const otherName = chat.participantNames[otherId] || 'User';
-          return `<div class="chat-list-item" data-chat-id="${chat.chatId}" data-other-name="${otherName}" data-other-id="${otherId}" data-item-name="${chat.itemName || 'Item'}" data-donation-id="${chat.donationId || ''}">
+          return `<div class="chat-list-item" data-chat-id="${chat.chatId}" data-other-name="${otherName}" data-other-id="${otherId}" data-item-name="${chat.itemName || 'Item'}" data-donation-id="${chat.donationId || ''}" data-distance="${chat.distance || ''}">
             <div class="chat-avatar"><i class="fas fa-user"></i></div>
-            <div class="chat-info"><div class="chat-name">${escapeHtml(otherName)}</div><div class="chat-last-message">${escapeHtml(chat.lastMessage || 'Say hello!')}</div><div style="font-size:0.65rem;color:#FF6B6B;">${escapeHtml(chat.itemName || '')}</div></div>
+            <div class="chat-info"><div class="chat-name">${escapeHtml(otherName)}</div><div class="chat-last-message">${escapeHtml(chat.lastMessage || 'Say hello!')}</div><div style="font-size:0.65rem;color:#FF6B6B;">${escapeHtml(chat.itemName || '')} ${chat.distance ? `| 📍 ${chat.distance.toFixed(1)} km` : ''}</div></div>
             <div class="chat-time">${chat.lastMessageTime ? new Date(chat.lastMessageTime.toDate()).toLocaleDateString() : 'New'}</div>
           </div>`;
         }).join('');
         document.querySelectorAll('.chat-list-item').forEach(item => {
-          item.addEventListener('click', () => openChat(item.dataset.chatId, item.dataset.otherName, item.dataset.otherId, item.dataset.itemName, item.dataset.donationId));
+          item.addEventListener('click', () => openChat(item.dataset.chatId, item.dataset.otherName, item.dataset.otherId, item.dataset.itemName, item.dataset.donationId, parseFloat(item.dataset.distance)));
         });
       }
     });
@@ -815,8 +465,8 @@
     const content = document.getElementById('contentArea');
     content.innerHTML = `
       <div class="card"><div class="card-title"><i class="fas fa-gift"></i> Donate an Item</div>
-      ${!userLocation ? '<div class="location-banner" style="margin-bottom:16px;"><i class="fas fa-map-marker-alt"></i> Enable location to share</div>' : ''}
-      <div class="form-group"><div class="image-upload-area" id="uploadArea"><i class="fas fa-cloud-upload-alt"></i><p>Tap to add photo</p><input type="file" id="imageInput" accept="image/*" style="display:none;"></div><img id="imagePreview" class="image-preview"></div>
+      ${!userLocation ? '<div class="location-banner" style="margin-bottom:16px;"><i class="fas fa-map-marker-alt"></i> Enable location to share with people within 50km</div>' : ''}
+      <div class="form-group"><div class="image-upload-area" id="uploadArea"><i class="fas fa-cloud-upload-alt"></i><p>Tap to add photo (optional)</p><input type="file" id="imageInput" accept="image/*" style="display:none;"></div><img id="imagePreview" class="image-preview"></div>
       <div class="form-group"><label>Item Name *</label><input type="text" id="itemName" placeholder="e.g., Fresh Milk, Bread"></div>
       <div class="form-group"><label>Expiry Date *</label><input type="date" id="expiryDate"></div>
       <div class="form-group"><label>Urgency</label><select id="urgency"><option value="low">🟢 Low - 3+ days left</option><option value="medium">🟡 Medium - 1-2 days left</option><option value="high">🔴 High - Today/tomorrow</option></select></div>
@@ -847,12 +497,12 @@
     const content = document.getElementById('contentArea');
     content.innerHTML = `
       <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> Quick Request</div>
-      <p style="font-size:0.8rem;color:#6B7280;margin-bottom:16px;">Post what you need - nearby donors will see it instantly!</p>
-      ${!userLocation ? '<div class="location-banner" style="margin-bottom:16px;"><i class="fas fa-map-marker-alt"></i> Enable location to find donors</div>' : ''}
+      <p style="font-size:0.8rem;color:#6B7280;margin-bottom:16px;">Post what you need - donors within 50km will be able to help you!</p>
+      ${!userLocation ? '<div class="location-banner" style="margin-bottom:16px;"><i class="fas fa-map-marker-alt"></i> Enable location to connect with nearby donors</div>' : ''}
       <div class="form-group"><label>What do you need? *</label><input type="text" id="requestName" placeholder="e.g., Milk, Medicine"></div>
       <div class="form-group"><label>Urgency</label><select id="urgencyLevel"><option value="low">🟢 Low - Can wait</option><option value="medium">🟡 Medium - Need within 2 days</option><option value="high">🔴 High - Need today/tomorrow</option></select></div>
       <div class="form-group"><label>Availability</label><select id="pickupAvailability">${availabilityOptions.map(opt => `<option>${opt}</option>`).join('')}</select></div>
-      <div class="form-group"><label>Reason</label><textarea id="reason" placeholder="Brief reason..."></textarea></div>
+      <div class="form-group"><label>Reason</label><textarea id="reason" placeholder="Brief reason helps donors understand..."></textarea></div>
       <button class="btn btn-primary" id="submitRequestBtn"><i class="fas fa-magic"></i> Post Request</button></div>`;
     
     document.getElementById('submitRequestBtn').addEventListener('click', async () => {
@@ -868,7 +518,7 @@
     content.innerHTML = `
       <div class="card"><div class="card-title"><i class="fas fa-user-circle"></i> My Profile</div>
       <div style="text-align:center;"><i class="fas fa-user-circle" style="font-size:4rem;color:#FF6B6B;"></i><h3>${escapeHtml(currentUser?.email || 'User')}</h3></div>
-      ${userLocation ? `<div><i class="fas fa-check-circle" style="color:#2E7D32;"></i> Location active</div>` : '<button class="btn btn-primary" id="enableProfileLocation">Enable Location</button>'}
+      ${userLocation ? `<div><i class="fas fa-check-circle" style="color:#2E7D32;"></i> Location: ${userLocation.lat.toFixed(4)}°, ${userLocation.lng.toFixed(4)}°</div><div style="margin-top:8px;"><i class="fas fa-globe"></i> You can connect with people within 50km radius</div>` : '<button class="btn btn-primary" id="enableProfileLocation">Enable Location</button>'}
       <button class="btn btn-outline" id="logoutBtn" style="margin-top:16px;">Logout</button></div>`;
     document.getElementById('enableProfileLocation')?.addEventListener('click', enableLocation);
     document.getElementById('logoutBtn')?.addEventListener('click', () => signOut(auth));
@@ -890,11 +540,12 @@
 
   function renderLoginPage() {
     document.getElementById('contentArea').innerHTML = `
-      <div class="card"><div class="card-title"><i class="fas fa-lock"></i> Welcome</div>
+      <div class="card"><div class="card-title"><i class="fas fa-lock"></i> Welcome to ReLife AI</div>
       <div class="form-group"><input type="email" id="loginEmail" placeholder="Email"></div>
       <div class="form-group"><input type="password" id="loginPassword" placeholder="Password"></div>
       <button class="btn btn-primary" id="loginBtn" style="margin-bottom:12px;">Login</button>
-      <button class="btn btn-outline" id="signupBtn">Sign Up</button></div>`;
+      <button class="btn btn-outline" id="signupBtn">Sign Up</button>
+      <p style="font-size:0.7rem;text-align:center;margin-top:12px;">Connect with people within 50km to share and rescue food!</p></div>`;
     document.getElementById('loginBtn').addEventListener('click', async () => {
       try { await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); showToast("Welcome!"); } 
       catch(err) { showToast(err.message); }
@@ -911,7 +562,7 @@
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentPage = btn.dataset.page;
-      document.getElementById('appHeader').innerHTML = `<h1><i class="fas fa-leaf"></i> ReLife AI</h1><div class="subtitle">Smart Community Expiry Rescue | Real-time</div>`;
+      document.getElementById('appHeader').innerHTML = `<h1><i class="fas fa-leaf"></i> ReLife AI</h1><div class="subtitle">Smart Community Expiry Rescue | 50km Radius</div>`;
       renderCurrentPage();
     });
   });
