@@ -1,93 +1,480 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#FF6B6B">
   <title>ReLife AI | Smart Community Expiry Rescue</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #F5F7FA; color: #1A2C3E; }
-    .app-wrapper { max-width: 450px; margin: 0 auto; background: #F5F7FA; min-height: 100vh; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-    .app-header { background: linear-gradient(135deg, #FF6B6B, #4ECDC4); color: white; padding: 20px; position: sticky; top: 0; z-index: 100; }
-    .app-header h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
-    .subtitle { font-size: 0.75rem; margin-top: 5px; opacity: 0.9; }
-    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); max-width: 450px; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 20px 20px; border-top: 1px solid #E5E9F0; z-index: 100; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; color: #9CA3AF; font-size: 0.7rem; transition: 0.3s; position: relative; }
-    .nav-item i { font-size: 1.3rem; }
-    .nav-item.active { color: #FF6B6B; }
-    .badge { position: absolute; top: -6px; right: -6px; background: #FF4757; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-    .content-area { padding: 20px; padding-bottom: 80px; margin-bottom: 60px; }
-    .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 200px); background: #F5F7FA; }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .message { max-width: 80%; padding: 10px 14px; border-radius: 18px; position: relative; word-wrap: break-word; }
-    .message-sent { background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-    .message-received { background: #E5E9F0; color: #1A2C3E; align-self: flex-start; border-bottom-left-radius: 4px; }
-    .message-time { font-size: 0.65rem; margin-top: 4px; opacity: 0.7; }
-    .chat-input-area { padding: 16px; background: white; border-top: 1px solid #E5E9F0; display: flex; gap: 10px; }
-    .chat-input-area input { flex: 1; padding: 12px; border: 1px solid #E5E9F0; border-radius: 25px; outline: none; }
-    .chat-input-area button { width: auto; padding: 12px 20px; background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; border: none; border-radius: 25px; cursor: pointer; }
-    .chat-list-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid #E5E9F0; cursor: pointer; transition: background 0.2s; }
-    .chat-list-item:hover { background: #F9FAFB; }
-    .chat-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #FF6B6B, #FF4757); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-    .chat-info { flex: 1; }
-    .chat-name { font-weight: 600; margin-bottom: 4px; }
-    .chat-last-message { font-size: 0.75rem; color: #6B7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .chat-time { font-size: 0.7rem; color: #9CA3AF; }
-    .btn { padding: 12px; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; width: 100%; }
-    .btn-primary { background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; }
-    .btn-outline { background: white; border: 1px solid #E5E9F0; color: #FF6B6B; }
-    .location-banner { background: #F3F4F6; border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; visibility: hidden; opacity: 0; transition: 0.3s; }
-    .modal.active { visibility: visible; opacity: 1; }
-    .modal-content { background: white; border-radius: 24px; padding: 24px; max-width: 90%; width: 320px; text-align: center; }
-    .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1F2937; color: white; padding: 12px 20px; border-radius: 40px; font-size: 0.85rem; z-index: 1000; transition: 0.3s; opacity: 0; pointer-events: none; }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .form-group { margin-bottom: 16px; }
-    input, textarea, select { width: 100%; padding: 12px; border: 1px solid #E5E9F0; border-radius: 12px; font-size: 0.9rem; }
-    .back-button { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: white; margin-right: 10px; }
-    .item-image { max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 12px; }
-    .qr-code { width: 200px; height: 200px; margin: 10px auto; display: block; }
-    @media (max-width: 450px) { .app-wrapper { width: 100%; } }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #1A2C3E;
+    }
+
+    .app-wrapper {
+      max-width: 450px;
+      margin: 0 auto;
+      background: #F5F7FA;
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #96CEB4 75%, #FFEAA7 100%);
+      color: white;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .app-header h1 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+      margin-top: 5px;
+      opacity: 0.9;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 450px;
+      width: 100%;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 20px 20px;
+      border-top: 1px solid #E5E9F0;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9CA3AF;
+      font-size: 0.7rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item i {
+      font-size: 1.3rem;
+    }
+
+    .nav-item.active {
+      color: #FF6B6B;
+    }
+
+    .content-area {
+      padding: 20px;
+      padding-bottom: 80px;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF6B6B, #FF4757);
+      color: white;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #FF6B6B;
+      color: #FF6B6B;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #4ECDC4, #45B7D1);
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: #374151;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #E5E9F0;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    select {
+      background: white;
+      cursor: pointer;
+    }
+
+    .image-upload-area {
+      border: 2px dashed #E5E9F0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .image-upload-area:hover {
+      border-color: #FF6B6B;
+      background: #FFF5F5;
+    }
+
+    .image-preview {
+      width: 100%;
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .image-preview.active {
+      display: block;
+    }
+
+    .location-banner {
+      background: #F3F4F6;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1F2937;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      z-index: 1000;
+      transition: 0.3s;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Chat Styles */
+    .chat-list-item, .match-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid #E5E9F0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chat-list-item:hover, .match-card:hover {
+      background: #F9FAFB;
+    }
+
+    .match-card {
+      border-left: 4px solid #FF6B6B;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      background: white;
+    }
+
+    .match-score {
+      background: linear-gradient(135deg, #FF6B6B, #FF4757);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: white;
+      display: inline-block;
+    }
+
+    .chat-avatar {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #FF6B6B, #FF4757);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .chat-info {
+      flex: 1;
+    }
+
+    .chat-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .chat-last-message {
+      font-size: 0.75rem;
+      color: #6B7280;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 180px);
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      word-wrap: break-word;
+    }
+
+    .message-sent {
+      background: linear-gradient(135deg, #FF6B6B, #FF4757);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-received {
+      background: #E5E9F0;
+      color: #1A2C3E;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-input-area {
+      padding: 16px;
+      background: white;
+      border-top: 1px solid #E5E9F0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #E5E9F0;
+      border-radius: 25px;
+    }
+
+    .chat-input-area button {
+      width: auto;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #FF6B6B, #FF4757);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: white;
+      margin-right: 10px;
+    }
+
+    .qr-code-container {
+      text-align: center;
+      padding: 16px;
+      background: white;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .modal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      max-width: 90%;
+      width: 320px;
+      text-align: center;
+    }
+
+    .time-badge {
+      display: inline-block;
+      background: #E8F5E9;
+      color: #2E7D32;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 450px) {
+      .app-wrapper {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
 <div class="app-wrapper">
   <div class="app-header" id="appHeader">
-    <h1><i class="fas fa-leaf"></i> ReLife AI</h1>
+    <h1>
+      <i class="fas fa-leaf"></i> ReLife AI
+    </h1>
     <div class="subtitle">Smart Community Expiry Rescue | Chat & Connect</div>
   </div>
+
   <div class="content-area" id="contentArea"></div>
+
   <div class="bottom-nav">
-    <button class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
-    <button class="nav-item" data-page="donate"><i class="fas fa-gift"></i><span>Donate</span></button>
-    <button class="nav-item" data-page="request"><i class="fas fa-hand-holding-heart"></i><span>Request</span></button>
-    <button class="nav-item" data-page="chats"><i class="fas fa-comments"></i><span>Chats</span><span id="unreadBadge" class="badge" style="display: none;">0</span></button>
-    <button class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+    <button class="nav-item active" data-page="home">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </button>
+    <button class="nav-item" data-page="donate">
+      <i class="fas fa-gift"></i>
+      <span>Donate</span>
+    </button>
+    <button class="nav-item" data-page="quick-request">
+      <i class="fas fa-bolt"></i>
+      <span>Quick Request</span>
+    </button>
+    <button class="nav-item" data-page="chats">
+      <i class="fas fa-comments"></i>
+      <span>Chats</span>
+    </button>
+    <button class="nav-item" data-page="profile">
+      <i class="fas fa-user"></i>
+      <span>Profile</span>
+    </button>
   </div>
 </div>
+
 <div id="toast" class="toast"></div>
+
+<!-- QR Modal for Donor -->
+<div id="qrModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-qrcode"></i> Pickup QR Code</h3>
+    <div id="qrCodeContainer"></div>
+    <p style="font-size: 0.75rem; margin: 12px 0;">Share this QR with the receiver for pickup verification</p>
+    <button class="btn btn-primary" id="closeQrBtn">Close</button>
+  </div>
+</div>
+
+<!-- Scanner Modal for Receiver -->
+<div id="scannerModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-camera"></i> Scan Donor's QR Code</h3>
+    <div id="qr-reader" style="width: 100%;"></div>
+    <div id="scanResult"></div>
+    <button class="btn btn-secondary" id="closeScannerBtn">Close</button>
+  </div>
+</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, where, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
 
-  // Your Firebase configuration (replace with your own if needed)
   const firebaseConfig = {
-    apiKey: "AIzaSyAlBfC5JkFTsix9MyhKaum8t9TZa8VtVxU",
-    authDomain: "relife-ai.firebaseapp.com",
-    projectId: "relife-ai",
-    storageBucket: "relife-ai.firebasestorage.app",
-    messagingSenderId: "414251097198",
-    appId: "1:414251097198:web:d1b9c5fc16972c6d881a7f",
-    measurementId: "G-04XVCRLRVJ"
+    apiKey: "AIzaSyBOPmt7VHvKphPe6SUECih058r0TTel8qk",
+    authDomain: "relife-ai-6a941.firebaseapp.com",
+    projectId: "relife-ai-6a941",
+    storageBucket: "relife-ai-6a941.firebasestorage.app",
+    messagingSenderId: "116033291264",
+    appId: "1:116033291264:web:bde7b2567463d2761244e5"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -100,6 +487,19 @@
   let userLocation = null;
   let currentChatRoom = null;
   let unsubscribeMessages = null;
+  let selectedImageFile = null;
+  let html5QrScanner = null;
+
+  // Availability options with time brackets
+  const availabilityOptions = [
+    { value: "Early Morning (5:00 AM - 8:00 AM)", label: "🌅 Early Morning (5:00 AM - 8:00 AM)" },
+    { value: "Morning (8:00 AM - 12:00 PM)", label: "☀️ Morning (8:00 AM - 12:00 PM)" },
+    { value: "Afternoon (12:00 PM - 4:00 PM)", label: "🌤️ Afternoon (12:00 PM - 4:00 PM)" },
+    { value: "Evening (4:00 PM - 7:00 PM)", label: "🌙 Evening (4:00 PM - 7:00 PM)" },
+    { value: "Night (7:00 PM - 10:00 PM)", label: "⭐ Night (7:00 PM - 10:00 PM)" },
+    { value: "Late Night (10:00 PM - 5:00 AM)", label: "🌙 Late Night (10:00 PM - 5:00 AM)" },
+    { value: "Flexible - Any time", label: "🕒 Flexible - Any time" }
+  ];
 
   function showToast(message) {
     const toast = document.getElementById('toast');
@@ -109,77 +509,161 @@
   }
 
   function enableLocation() {
-    if (!navigator.geolocation) { showToast("Geolocation not supported"); return; }
+    if (!navigator.geolocation) {
+      showToast("Geolocation not supported");
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
-      (position) => { userLocation = { lat: position.coords.latitude, lng: position.coords.longitude }; showToast("📍 Location enabled!"); },
+      (position) => {
+        userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+        showToast("📍 Location enabled!");
+        renderCurrentPage();
+      },
       () => showToast("Please enable location")
     );
   }
 
-  async function updateUnreadBadge() {
-    if (!currentUser) return;
-    const chatsQuery = query(collection(db, "chats"));
-    const snapshot = await getDocs(chatsQuery);
-    let unreadCount = 0;
-    for (const docSnap of snapshot.docs) {
-      const chat = docSnap.data();
-      if (chat.participants.includes(currentUser.uid)) {
-        const messagesQuery = query(
-          collection(db, "messages"),
-          where("chatId", "==", chat.chatId),
-          where("read", "==", false),
-          where("senderId", "!=", currentUser.uid)
-        );
-        const msgSnap = await getDocs(messagesQuery);
-        unreadCount += msgSnap.size;
-      }
+  // Upload image function
+  async function uploadImage(file, path) {
+    if (!file) return null;
+    try {
+      const storageRef = ref(storage, path);
+      await uploadBytes(storageRef, file);
+      return await getDownloadURL(storageRef);
+    } catch(err) {
+      console.error("Upload error:", err);
+      return null;
     }
-    const badge = document.getElementById('unreadBadge');
-    if (unreadCount > 0) {
-      badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-      badge.style.display = 'flex';
-    } else badge.style.display = 'none';
   }
 
-  async function markChatAsRead(chatId) {
-    if (!currentUser) return;
-    const messagesQuery = query(
-      collection(db, "messages"),
-      where("chatId", "==", chatId),
-      where("read", "==", false),
-      where("senderId", "!=", currentUser.uid)
-    );
-    const snapshot = await getDocs(messagesQuery);
-    snapshot.forEach(async (docSnap) => {
-      await updateDoc(doc(db, "messages", docSnap.id), { read: true });
-    });
+  // Calculate match score
+  function calculateMatchScore(donation, request) {
+    let score = 0;
+    const donationName = donation.name.toLowerCase();
+    const requestName = request.name.toLowerCase();
+    
+    if (donationName.includes(requestName) || requestName.includes(donationName)) {
+      score += 40;
+    }
+    
+    if (donation.urgency === 'high' && request.urgency === 'high') score += 20;
+    else if (donation.urgency === 'high' || request.urgency === 'high') score += 10;
+    
+    if (donation.availability === request.availability) score += 10;
+    
+    return Math.min(score, 100);
   }
 
-  async function getOrCreateChatRoom(otherUserId, otherUserName, matchId, itemName) {
-    if (!currentUser) return null;
-    const chatId = [currentUser.uid, otherUserId].sort().join('_');
-    const chatsQuery = query(collection(db, "chats"), where("chatId", "==", chatId));
-    const chatSnapshot = await getDocs(chatsQuery);
-    if (chatSnapshot.empty) {
+  // Create match and open chat
+  async function createMatchAndChat(donationId, requestId, donationName, requestName, donorId, donorName, requesterId, requesterName) {
+    try {
+      const matchId = `${donationId}_${requestId}_${Date.now()}`;
+      const qrData = JSON.stringify({
+        matchId: matchId,
+        donationId: donationId,
+        donationName: donationName,
+        timestamp: Date.now()
+      });
+      
+      await addDoc(collection(db, "matches"), {
+        matchId: matchId,
+        donationId: donationId,
+        requestId: requestId,
+        donationName: donationName,
+        requestName: requestName,
+        donorId: donorId,
+        donorName: donorName,
+        requesterId: requesterId,
+        requesterName: requesterName,
+        qrData: qrData,
+        status: "pending_pickup",
+        createdAt: serverTimestamp()
+      });
+      
+      await updateDoc(doc(db, "donations", donationId), { status: "matched", matchId: matchId });
+      await updateDoc(doc(db, "requests", requestId), { status: "matched", matchId: matchId });
+      
+      const chatId = [donorId, requesterId].sort().join('_');
       await addDoc(collection(db, "chats"), {
         chatId: chatId,
-        participants: [currentUser.uid, otherUserId],
-        participantNames: {
-          [currentUser.uid]: currentUser.email.split('@')[0],
-          [otherUserId]: otherUserName
-        },
         matchId: matchId,
-        itemName: itemName,
-        lastMessage: "Chat started",
+        participants: [donorId, requesterId],
+        participantNames: {
+          [donorId]: donorName,
+          [requesterId]: requesterName
+        },
+        donationName: donationName,
+        requestName: requestName,
+        lastMessage: "Match created! You can now coordinate pickup.",
         lastMessageTime: serverTimestamp(),
         createdAt: serverTimestamp()
       });
+      
+      await addDoc(collection(db, "messages"), {
+        chatId: chatId,
+        senderId: "system",
+        senderName: "ReLife AI",
+        message: `🎉 Match found! ${donorName} has ${donationName} available. ${requesterName} needs it. Please coordinate pickup details here.`,
+        timestamp: serverTimestamp(),
+        isSystem: true
+      });
+      
+      showToast("✓ Match found! Opening chat...");
+      
+      setTimeout(() => {
+        openChat(chatId, donorId === currentUser?.uid ? requesterName : donorName, 
+                donorId === currentUser?.uid ? requesterId : donorId, donationName, matchId);
+      }, 1000);
+      
+      return matchId;
+    } catch(err) {
+      showToast("Error: " + err.message);
     }
-    return chatId;
   }
 
+  // AI Matching Engine
+  async function findAndCreateMatches() {
+    const donationsSnap = await getDocs(query(collection(db, "donations"), where("status", "==", "available")));
+    const requestsSnap = await getDocs(query(collection(db, "requests"), where("status", "==", "pending")));
+    
+    const donations = [];
+    const requests = [];
+    donationsSnap.forEach(doc => donations.push({ id: doc.id, ...doc.data() }));
+    requestsSnap.forEach(doc => requests.push({ id: doc.id, ...doc.data() }));
+    
+    const matches = [];
+    for (const donation of donations) {
+      for (const request of requests) {
+        const score = calculateMatchScore(donation, request);
+        if (score > 60) {
+          matches.push({ donation, request, score });
+        }
+      }
+    }
+    
+    matches.sort((a, b) => b.score - a.score);
+    
+    if (matches.length > 0 && currentUser) {
+      const topMatch = matches[0];
+      const isDonor = topMatch.donation.userId === currentUser.uid;
+      const isRequester = topMatch.request.userId === currentUser.uid;
+      
+      if (isDonor || isRequester) {
+        showToast(`🤖 AI found a ${topMatch.score}% match! Opening chat...`);
+        await createMatchAndChat(
+          topMatch.donation.id, topMatch.request.id,
+          topMatch.donation.name, topMatch.request.name,
+          topMatch.donation.userId, topMatch.donation.userEmail?.split('@')[0] || 'Donor',
+          topMatch.request.userId, topMatch.request.userEmail?.split('@')[0] || 'Requester'
+        );
+      }
+    }
+  }
+
+  // Chat functions
   async function sendMessage(chatId, message) {
     if (!message.trim() || !currentUser) return;
+    
     await addDoc(collection(db, "messages"), {
       chatId: chatId,
       senderId: currentUser.uid,
@@ -188,6 +672,7 @@
       timestamp: serverTimestamp(),
       read: false
     });
+    
     const chatsQuery = query(collection(db, "chats"), where("chatId", "==", chatId));
     const chatSnapshot = await getDocs(chatsQuery);
     chatSnapshot.forEach(async (docSnap) => {
@@ -196,78 +681,113 @@
         lastMessageTime: serverTimestamp()
       });
     });
-    updateUnreadBadge();
   }
 
   function loadMessages(chatId) {
     if (unsubscribeMessages) unsubscribeMessages();
+    
     const messagesQuery = query(collection(db, "messages"), where("chatId", "==", chatId), orderBy("timestamp", "asc"));
-    unsubscribeMessages = onSnapshot(messagesQuery, async (snapshot) => {
+    unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
       const messages = [];
       snapshot.forEach(doc => messages.push({ id: doc.id, ...doc.data() }));
       renderChatMessages(messages);
-      await markChatAsRead(chatId);
     });
   }
 
   function renderChatMessages(messages) {
     const container = document.getElementById('chatMessages');
     if (!container) return;
+    
     container.innerHTML = messages.map(msg => `
       <div class="message ${msg.senderId === currentUser?.uid ? 'message-sent' : 'message-received'}">
         <div>${escapeHtml(msg.message)}</div>
         <div class="message-time">${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</div>
       </div>
     `).join('');
+    
     container.scrollTop = container.scrollHeight;
   }
 
-  async function renderChatList() {
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `<div class="card"><div class="card-title"><i class="fas fa-comments"></i> Your Conversations</div><div id="chatListContainer">Loading chats...</div></div>`;
-    const chatsQuery = query(collection(db, "chats"), orderBy("lastMessageTime", "desc"));
-    onSnapshot(chatsQuery, (snapshot) => {
-      const chats = [];
-      snapshot.forEach(doc => {
-        const chat = doc.data();
-        if (chat.participants.includes(currentUser?.uid)) chats.push({ id: doc.id, ...chat });
-      });
-      const container = document.getElementById('chatListContainer');
-      if (chats.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-comments" style="font-size: 3rem; color: #9CA3AF;"></i><p>No conversations yet. Start by matching with someone!</p></div>';
-        return;
-      }
-      container.innerHTML = chats.map(chat => {
-        const otherUser = chat.participants.find(p => p !== currentUser?.uid);
-        const otherName = chat.participantNames[otherUser] || 'User';
-        return `
-          <div class="chat-list-item" data-chat-id="${chat.chatId}" data-other-name="${otherName}" data-other-id="${otherUser}" data-item-name="${chat.itemName || 'Item'}" data-donation-id="${chat.matchId}">
-            <div class="chat-avatar"><i class="fas fa-user"></i></div>
-            <div class="chat-info"><div class="chat-name">${escapeHtml(otherName)}</div><div class="chat-last-message">${escapeHtml(chat.lastMessage || 'No messages yet')}</div></div>
-            <div class="chat-time">${chat.lastMessageTime ? new Date(chat.lastMessageTime.toDate()).toLocaleDateString() : 'New'}</div>
-          </div>
-        `;
-      }).join('');
-      document.querySelectorAll('.chat-list-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const chatId = item.dataset.chatId;
-          const otherName = item.dataset.otherName;
-          const otherId = item.dataset.otherId;
-          const itemName = item.dataset.itemName;
-          const donationId = item.dataset.donationId;
-          openChat(chatId, otherName, otherId, itemName, donationId);
-        });
-      });
+  function showDonorQR(matchId, donationName) {
+    const qrData = JSON.stringify({
+      matchId: matchId,
+      donationName: donationName,
+      verificationCode: Math.random().toString(36).substring(2, 10).toUpperCase(),
+      timestamp: Date.now()
     });
+    
+    const qrContainer = document.getElementById('qrCodeContainer');
+    qrContainer.innerHTML = '';
+    new QRCode(qrContainer, {
+      text: qrData,
+      width: 200,
+      height: 200,
+      colorDark: "#FF6B6B",
+      colorLight: "#ffffff"
+    });
+    document.getElementById('qrModal').classList.add('active');
+    showToast("📱 QR Code generated! Share with receiver for pickup");
   }
 
-  function openChat(chatId, otherName, otherId, itemName, donationId) {
-    currentChatRoom = { chatId, otherName, otherId, itemName, donationId };
+  async function initScanner() {
+    if (html5QrScanner) {
+      try { await html5QrScanner.stop(); } catch(e) {}
+    }
+    
+    html5QrScanner = new Html5Qrcode("qr-reader");
+    try {
+      await html5QrScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, async (decodedText) => {
+        try {
+          const data = JSON.parse(decodedText);
+          const matchesQuery = query(collection(db, "matches"), where("matchId", "==", data.matchId));
+          const querySnapshot = await getDocs(matchesQuery);
+          
+          if (!querySnapshot.empty) {
+            const matchDoc = querySnapshot.docs[0];
+            const match = matchDoc.data();
+            
+            if (match.status === 'pending_pickup') {
+              document.getElementById('scanResult').innerHTML = `
+                <div style="background: #D1FAE5; padding: 12px; border-radius: 12px; margin-top: 12px;">
+                  <strong>✓ Valid QR Code!</strong><br>
+                  Item: ${escapeHtml(match.donationName)}<br>
+                  <button id="verifyPickupBtn" class="btn btn-success" style="margin-top: 8px;">Confirm Pickup</button>
+                </div>
+              `;
+              document.getElementById('verifyPickupBtn')?.addEventListener('click', async () => {
+                await updateDoc(doc(db, "matches", matchDoc.id), { 
+                  status: "completed", 
+                  completedAt: serverTimestamp(),
+                  verifiedBy: currentUser?.uid
+                });
+                showToast("🎉 Pickup verified! Thank you for reducing waste!");
+                document.getElementById('scannerModal').classList.remove('active');
+                if (html5QrScanner) await html5QrScanner.stop();
+              });
+            } else {
+              document.getElementById('scanResult').innerHTML = '<p style="color: #DC2626;">❌ This item has already been picked up</p>';
+            }
+          } else {
+            document.getElementById('scanResult').innerHTML = '<p style="color: #DC2626;">❌ Invalid QR code</p>';
+          }
+        } catch(e) {
+          document.getElementById('scanResult').innerHTML = '<p style="color: #DC2626;">❌ Invalid QR code</p>';
+        }
+      });
+    } catch(err) {
+      showToast("Camera access needed");
+    }
+  }
+
+  function openChat(chatId, otherName, otherId, itemName, matchId) {
+    currentChatRoom = { chatId, otherName, otherId, itemName, matchId };
+    
     document.getElementById('appHeader').innerHTML = `
       <button class="back-button" onclick="location.reload()">←</button>
       <h1 style="font-size: 1.2rem;"><i class="fas fa-comments"></i> Chat with ${escapeHtml(otherName)}</h1>
-      <div class="subtitle">About: ${escapeHtml(itemName)}</div>
+      <div class="subtitle">Item: ${escapeHtml(itemName)}</div>
     `;
+    
     const content = document.getElementById('contentArea');
     content.innerHTML = `
       <div class="chat-container">
@@ -278,340 +798,341 @@
         </div>
       </div>
     `;
-    // Add QR buttons
-    const chatArea = document.querySelector('.chat-container');
-    const qrButtonsDiv = document.createElement('div');
-    qrButtonsDiv.style.display = 'flex';
-    qrButtonsDiv.style.gap = '8px';
-    qrButtonsDiv.style.padding = '8px 16px';
-    qrButtonsDiv.style.backgroundColor = '#f9fafb';
-    qrButtonsDiv.style.borderRadius = '12px';
-    qrButtonsDiv.style.margin = '8px';
-    if (currentUser?.uid !== otherId) {
-      // Receiver: show QR code for verification (the donor will scan it)
-      qrButtonsDiv.innerHTML = `<button id="showQrBtn" class="btn btn-primary" style="margin:0; background:#4ECDC4;">Show QR Code for Pickup</button>`;
-    } else {
-      // Donor: add scanner button
-      qrButtonsDiv.innerHTML = `<button id="scanQrBtn" class="btn btn-primary" style="margin:0;">Scan Receiver's QR</button>`;
+    
+    if (currentUser?.uid === otherId) {
+      const qrButton = document.createElement('div');
+      qrButton.style.padding = '12px';
+      qrButton.style.margin = '8px 16px';
+      qrButton.innerHTML = `<button class="btn btn-primary" id="showQrBtn"><i class="fas fa-qrcode"></i> Generate Pickup QR Code</button>`;
+      document.querySelector('.chat-input-area').before(qrButton);
+      document.getElementById('showQrBtn')?.addEventListener('click', () => showDonorQR(matchId, itemName));
+    } else if (currentUser?.uid !== otherId) {
+      const scannerButton = document.createElement('div');
+      scannerButton.style.padding = '12px';
+      scannerButton.style.margin = '8px 16px';
+      scannerButton.innerHTML = `<button class="btn btn-primary" id="showScannerBtn"><i class="fas fa-camera"></i> Scan Donor's QR to Confirm Pickup</button>`;
+      document.querySelector('.chat-input-area').before(scannerButton);
+      document.getElementById('showScannerBtn')?.addEventListener('click', async () => {
+        document.getElementById('scannerModal').classList.add('active');
+        await initScanner();
+      });
     }
-    chatArea.prepend(qrButtonsDiv);
-
+    
     loadMessages(chatId);
+    
     document.getElementById('sendMessageBtn').addEventListener('click', async () => {
       const input = document.getElementById('messageInput');
       await sendMessage(chatId, input.value);
       input.value = '';
     });
+    
     document.getElementById('messageInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') document.getElementById('sendMessageBtn').click();
-    });
-
-    if (document.getElementById('showQrBtn')) {
-      document.getElementById('showQrBtn').addEventListener('click', () => showQrModal(donationId));
-    }
-    if (document.getElementById('scanQrBtn')) {
-      document.getElementById('scanQrBtn').addEventListener('click', () => showScanModal(donationId));
-    }
-  }
-
-  async function showQrModal(donationId) {
-    const itemDoc = await getDoc(doc(db, "donations", donationId));
-    if (!itemDoc.exists()) { showToast("Item not found"); return; }
-    const item = itemDoc.data();
-    if (item.status !== "requested") { showToast("Item is not in requested state"); return; }
-    // Generate unique token if not exists
-    let token = item.qrToken;
-    if (!token) {
-      token = Math.random().toString(36).substring(2, 15);
-      await updateDoc(doc(db, "donations", donationId), { qrToken: token });
-    }
-    const qrData = JSON.stringify({ donationId, token });
-    // Use QRCode library to generate QR image
-    const qrcode = await import("https://cdn.skypack.dev/qrcode");
-    const qrDataUrl = await qrcode.toDataURL(qrData);
-    const modal = document.createElement('div');
-    modal.className = 'modal active';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>Your Pickup QR Code</h3>
-        <img src="${qrDataUrl}" class="qr-code" alt="QR Code">
-        <p>Show this to the donor to complete the rescue.</p>
-        <button class="btn btn-primary" id="closeQrModal">Close</button>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    document.getElementById('closeQrModal').addEventListener('click', () => modal.remove());
-  }
-
-  async function showScanModal(donationId) {
-    const modal = document.createElement('div');
-    modal.className = 'modal active';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>Scan Receiver's QR Code</h3>
-        <div id="qr-reader" style="width:100%;"></div>
-        <button class="btn btn-outline" id="closeScanModal">Cancel</button>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    const scanner = new Html5Qrcode("qr-reader");
-    scanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      async (decodedText) => {
-        try {
-          const { donationId: scannedId, token } = JSON.parse(decodedText);
-          if (scannedId !== donationId) { showToast("QR code does not match this item"); return; }
-          const donationRef = doc(db, "donations", donationId);
-          const donationSnap = await getDoc(donationRef);
-          if (!donationSnap.exists()) throw new Error("Item not found");
-          const donation = donationSnap.data();
-          if (donation.status !== "requested") { showToast("Item not in requested state"); return; }
-          if (donation.qrToken !== token) { showToast("Invalid QR token"); return; }
-          await updateDoc(donationRef, { status: "completed", completedAt: serverTimestamp() });
-          showToast("Item rescued! Status updated.");
-          scanner.stop();
-          modal.remove();
-          location.reload(); // Refresh to update UI
-        } catch (err) { showToast("Invalid QR code"); }
-      },
-      (err) => console.warn(err)
-    );
-    document.getElementById('closeScanModal').addEventListener('click', () => {
-      scanner.stop();
-      modal.remove();
+      if (e.key === 'Enter') {
+        document.getElementById('sendMessageBtn').click();
+      }
     });
   }
 
+  async function renderChatList() {
+    const content = document.getElementById('contentArea');
+    content.innerHTML = `
+      <div class="card">
+        <div class="card-title">
+          <i class="fas fa-comments"></i> Your Conversations
+        </div>
+        <div id="chatListContainer">Loading chats...</div>
+      </div>
+    `;
+    
+    const chatsQuery = query(collection(db, "chats"), orderBy("lastMessageTime", "desc"));
+    onSnapshot(chatsQuery, (snapshot) => {
+      const chats = [];
+      snapshot.forEach(doc => {
+        const chat = doc.data();
+        if (chat.participants.includes(currentUser?.uid)) {
+          chats.push({ id: doc.id, ...chat });
+        }
+      });
+      
+      const container = document.getElementById('chatListContainer');
+      if (chats.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-comments" style="font-size: 3rem; color: #9CA3AF;"></i><p>No conversations yet. Post a request or donation to get matched!</p></div>';
+        return;
+      }
+      
+      container.innerHTML = chats.map(chat => {
+        const otherUser = chat.participants.find(p => p !== currentUser?.uid);
+        const otherName = chat.participantNames[otherUser] || 'User';
+        return `
+          <div class="chat-list-item" data-chat-id="${chat.chatId}" data-other-name="${otherName}" data-other-id="${otherUser}" data-item-name="${chat.donationName || 'Item'}" data-match-id="${chat.matchId}">
+            <div class="chat-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="chat-info">
+              <div class="chat-name">${escapeHtml(otherName)}</div>
+              <div class="chat-last-message">${escapeHtml(chat.lastMessage || 'No messages yet')}</div>
+              <div style="font-size: 0.65rem; color: #FF6B6B;">${escapeHtml(chat.donationName || '')}</div>
+            </div>
+            <div class="chat-time">
+              ${chat.lastMessageTime ? new Date(chat.lastMessageTime.toDate()).toLocaleDateString() : 'New'}
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      document.querySelectorAll('.chat-list-item').forEach(item => {
+        item.addEventListener('click', () => {
+          openChat(item.dataset.chatId, item.dataset.otherName, item.dataset.otherId, item.dataset.itemName, item.dataset.matchId);
+        });
+      });
+    });
+  }
+
+  // Add Donation with Image
   async function addDonation(name, expiry, availability, urgency, notes, imageFile) {
     if (!currentUser) return showToast("Please login");
+    
+    let imageUrl = null;
+    if (imageFile) {
+      showToast("📸 Uploading image...");
+      imageUrl = await uploadImage(imageFile, `donations/${Date.now()}_${imageFile.name}`);
+    }
+    
     try {
-      let imageUrl = null;
-      if (imageFile) {
-        const storageRef = ref(storage, `donations/${Date.now()}_${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(storageRef);
-      }
       await addDoc(collection(db, "donations"), {
-        name, expiryDate: expiry, availability, urgency, notes,
+        name, expiryDate: expiry, availability, urgency, notes, imageUrl,
         donorLocation: userLocation,
         userId: currentUser.uid,
         userEmail: currentUser.email,
         createdAt: serverTimestamp(),
-        status: "available",
-        imageUrl: imageUrl
+        status: "available"
       });
-      showToast("✓ Item donated! Others can now request it.");
+      showToast("✓ Item donated! AI will find matches automatically.");
+      setTimeout(() => findAndCreateMatches(), 2000);
       return true;
     } catch(err) { showToast("Error: " + err.message); return false; }
   }
 
-  async function addRequest(name, urgency, availability, reason, deadline) {
+  // Quick Request - No browsing needed
+  async function addQuickRequest(name, urgency, availability, reason) {
     if (!currentUser) return showToast("Please login");
     try {
       await addDoc(collection(db, "requests"), {
-        name, urgency, availability, reason, deadline,
+        name, urgency, availability, reason,
         requesterLocation: userLocation,
         userId: currentUser.uid,
         userEmail: currentUser.email,
         createdAt: serverTimestamp(),
         status: "pending"
       });
-      showToast("✓ Request posted! Donors can now help you.");
+      showToast("✓ Request posted! AI is finding matches for you...");
+      setTimeout(() => findAndCreateMatches(), 2000);
       return true;
     } catch(err) { showToast("Error: " + err.message); return false; }
   }
 
-  async function requestItem(donationId, donorId, donorName, itemName) {
-    if (!currentUser) { showToast("Please login first"); return; }
-    if (currentUser.uid === donorId) { showToast("You cannot request your own item"); return; }
-    try {
-      await updateDoc(doc(db, "donations", donationId), { status: "requested", requestedBy: currentUser.uid, requestedAt: serverTimestamp() });
-      const chatId = await getOrCreateChatRoom(donorId, donorName, donationId, itemName);
-      await sendMessage(chatId, `Hi! I'm interested in your ${itemName}. When can I pick it up?`);
-      showToast(`✓ Request sent! You can now chat with ${donorName}`);
-      document.querySelector('[data-page="chats"]').click();
-    } catch(err) { showToast("Error: " + err.message); }
-  }
-
-  async function respondToRequest(requestId, requesterId, requesterName, itemName) {
-    if (!currentUser) { showToast("Please login first"); return; }
-    if (currentUser.uid === requesterId) { showToast("You cannot respond to your own request"); return; }
-    try {
-      await updateDoc(doc(db, "requests", requestId), { status: "in_progress", respondedBy: currentUser.uid, respondedAt: serverTimestamp() });
-      const chatId = await getOrCreateChatRoom(requesterId, requesterName, requestId, itemName);
-      await sendMessage(chatId, `Hi! I can help with your request for ${itemName}. Let's coordinate.`);
-      showToast(`✓ You responded! Chat with ${requesterName} started.`);
-      document.querySelector('[data-page="chats"]').click();
-    } catch(err) { showToast("Error: " + err.message); }
-  }
-
+  // Home Page - Real-time donations and requests
   async function renderHomePage() {
     const content = document.getElementById('contentArea');
     content.innerHTML = `
-      ${!userLocation ? `<div class="location-banner"><div><i class="fas fa-map-marker-alt"></i> Enable location for better matches</div><button class="btn btn-primary" id="enableLocationBtn" style="width: auto; padding: 8px 16px;">Enable</button></div>` : `<div class="location-banner"><div><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Location active</div></div>`}
-      <div id="donorRequestsSection" style="display: none;"><div class="card"><div class="card-title"><i class="fas fa-bell"></i> Requests for Your Items</div><div id="donorRequestsList">Loading...</div></div></div>
-      <div id="activeRequestsSection" style="display: none;"><div class="card"><div class="card-title"><i class="fas fa-hands-helping"></i> Help Someone in Need</div><div id="activeRequestsList">Loading...</div></div></div>
-      <div id="availableDonationsSection"><div class="card"><div class="card-title"><i class="fas fa-gift"></i> Available Donations</div><div id="donationsList">Loading...</div></div></div>
-      <div id="myRequestsSection" style="display: none;"><div class="card"><div class="card-title"><i class="fas fa-list-ul"></i> My Pending Requests</div><div id="myRequestsList">Loading...</div></div></div>
+      ${!userLocation ? `
+        <div class="location-banner">
+          <div><i class="fas fa-map-marker-alt"></i> Enable location for better matches</div>
+          <button class="btn btn-primary" id="enableLocationBtn" style="width: auto; padding: 8px 16px;">Enable</button>
+        </div>
+      ` : `
+        <div class="location-banner">
+          <div><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Location active | AI Matching Ready</div>
+        </div>
+      `}
+      
+      <div class="card">
+        <div class="card-title"><i class="fas fa-gift"></i> Available Donations (Real-time)</div>
+        <div id="donationsList">Loading...</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title"><i class="fas fa-hand-holding-heart"></i> Active Requests</div>
+        <div id="requestsList">Loading...</div>
+      </div>
     `;
-    const userDonationsQuery = query(collection(db, "donations"), where("userId", "==", currentUser?.uid));
-    const userDonationsSnap = await getDocs(userDonationsQuery);
-    const isDonor = !userDonationsSnap.empty;
-    if (isDonor) {
-      document.getElementById('donorRequestsSection').style.display = 'block';
-      const donorRequestsQuery = query(collection(db, "donations"), where("userId", "==", currentUser.uid), where("status", "==", "requested"));
-      onSnapshot(donorRequestsQuery, (snapshot) => {
-        const requestedDonations = [];
-        snapshot.forEach(doc => requestedDonations.push({ id: doc.id, ...doc.data() }));
-        const container = document.getElementById('donorRequestsList');
-        if (requestedDonations.length === 0) container.innerHTML = '<div style="text-align: center; padding: 20px;">No one has requested your items yet.</div>';
-        else {
-          container.innerHTML = requestedDonations.map(d => `
-            <div style="border: 1px solid #E5E9F0; border-radius: 12px; padding: 12px; margin-bottom: 12px;">
-              <strong>${escapeHtml(d.name)}</strong><br>
-              <small>Requested by: ${escapeHtml(d.requestedBy?.split('@')[0] || 'Someone')}</small><br>
-              <button class="btn btn-primary respond-to-request-btn" style="margin-top: 8px; padding: 8px;" data-chat-id="${[currentUser.uid, d.requestedBy].sort().join('_')}" data-other-id="${d.requestedBy}" data-other-name="${escapeHtml(d.requestedBy?.split('@')[0])}" data-item-name="${escapeHtml(d.name)}" data-donation-id="${d.id}">Go to Chat</button>
-            </div>
-          `).join('');
-          document.querySelectorAll('.respond-to-request-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-              const chatId = btn.dataset.chatId;
-              const otherName = btn.dataset.otherName;
-              const otherId = btn.dataset.otherId;
-              const itemName = btn.dataset.itemName;
-              const donationId = btn.dataset.donationId;
-              openChat(chatId, otherName, otherId, itemName, donationId);
-            });
-          });
-        }
-      });
-      document.getElementById('activeRequestsSection').style.display = 'block';
-      const activeRequestsQuery = query(collection(db, "requests"), where("status", "==", "pending"));
-      onSnapshot(activeRequestsQuery, (snapshot) => {
-        const requests = [];
-        snapshot.forEach(doc => requests.push({ id: doc.id, ...doc.data() }));
-        const container = document.getElementById('activeRequestsList');
-        if (requests.length === 0) container.innerHTML = '<div style="text-align: center; padding: 20px;">No active requests at the moment.</div>';
-        else {
-          container.innerHTML = requests.map(r => `
-            <div style="border: 1px solid #E5E9F0; border-radius: 12px; padding: 12px; margin-bottom: 12px;">
-              <strong>${escapeHtml(r.name)}</strong><br>
-              <small>Urgency: ${r.urgency} | Need by: ${r.deadline || 'ASAP'}</small>
-              ${r.reason ? `<small><br>💬 "${escapeHtml(r.reason)}"</small>` : ''}
-              ${r.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">🔴 Urgent Need</div>' : ''}
-              <button class="btn btn-primary help-request-btn" style="margin-top: 8px; padding: 8px;" data-id="${r.id}" data-requester="${r.userId}" data-requester-name="${escapeHtml(r.userEmail?.split('@')[0])}" data-name="${escapeHtml(r.name)}">Help</button>
-            </div>
-          `).join('');
-          document.querySelectorAll('.help-request-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-              const requestId = btn.dataset.id;
-              const requesterId = btn.dataset.requester;
-              const requesterName = btn.dataset.requesterName;
-              const itemName = btn.dataset.name;
-              respondToRequest(requestId, requesterId, requesterName, itemName);
-            });
-          });
-        }
-      });
-    }
+    
     const donationsQuery = query(collection(db, "donations"), where("status", "==", "available"), orderBy("createdAt", "desc"));
     onSnapshot(donationsQuery, (snapshot) => {
       const donations = [];
       snapshot.forEach(doc => donations.push({ id: doc.id, ...doc.data() }));
       const container = document.getElementById('donationsList');
-      if (donations.length === 0) container.innerHTML = '<div style="text-align: center; padding: 20px;">No donations available</div>';
-      else {
+      if (donations.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 20px;">No donations available</div>';
+      } else {
         container.innerHTML = donations.map(d => `
           <div style="border: 1px solid #E5E9F0; border-radius: 12px; padding: 12px; margin-bottom: 12px;">
-            ${d.imageUrl ? `<img src="${d.imageUrl}" class="item-image" alt="Item">` : ''}
+            ${d.imageUrl ? `<img src="${d.imageUrl}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">` : ''}
             <strong>${escapeHtml(d.name)}</strong><br>
-            <small>Expires: ${formatDate(d.expiryDate)} | ${d.availability}</small>
-            ${d.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">⚠️ Urgent</div>' : ''}
-            ${currentUser && d.userId !== currentUser.uid ? `<button class="btn btn-primary request-item-btn" style="margin-top: 8px; padding: 8px;" data-id="${d.id}" data-donor="${d.userId}" data-donor-name="${escapeHtml(d.userEmail?.split('@')[0])}" data-name="${escapeHtml(d.name)}"><i class="fas fa-comment"></i> Request & Chat</button>` : ''}
+            <small>📅 Expires: ${formatDate(d.expiryDate)}</small><br>
+            <small>⏰ Available: ${escapeHtml(d.availability)}</small>
+            ${d.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">⚠️ Urgent - Expiring Soon!</div>' : ''}
+            <div style="font-size: 0.7rem; color: #4ECDC4; margin-top: 4px;">👤 ${escapeHtml(d.userEmail?.split('@')[0])}</div>
           </div>
         `).join('');
-        document.querySelectorAll('.request-item-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const donationId = btn.dataset.id;
-            const donorId = btn.dataset.donor;
-            const donorName = btn.dataset.donorName;
-            const itemName = btn.dataset.name;
-            requestItem(donationId, donorId, donorName, itemName);
-          });
-        });
       }
     });
-    const myRequestsQuery = query(collection(db, "requests"), where("userId", "==", currentUser?.uid), where("status", "==", "pending"));
-    onSnapshot(myRequestsQuery, (snapshot) => {
-      const myRequests = [];
-      snapshot.forEach(doc => myRequests.push({ id: doc.id, ...doc.data() }));
-      const container = document.getElementById('myRequestsList');
-      const section = document.getElementById('myRequestsSection');
-      if (myRequests.length > 0) {
-        section.style.display = 'block';
-        container.innerHTML = myRequests.map(r => `
+    
+    const requestsQuery = query(collection(db, "requests"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
+    onSnapshot(requestsQuery, (snapshot) => {
+      const requests = [];
+      snapshot.forEach(doc => requests.push({ id: doc.id, ...doc.data() }));
+      const container = document.getElementById('requestsList');
+      if (requests.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 20px;">No active requests</div>';
+      } else {
+        container.innerHTML = requests.map(r => `
           <div style="border: 1px solid #E5E9F0; border-radius: 12px; padding: 12px; margin-bottom: 12px;">
             <strong>${escapeHtml(r.name)}</strong><br>
-            <small>Urgency: ${r.urgency} | Need by: ${r.deadline || 'ASAP'}</small>
+            <small>⚠️ Urgency: ${r.urgency.toUpperCase()} | Need by: ${r.deadline || 'ASAP'}</small><br>
+            <small>⏰ Available: ${escapeHtml(r.availability)}</small>
             ${r.reason ? `<small><br>💬 "${escapeHtml(r.reason)}"</small>` : ''}
-            <div style="color: #FFB300; font-size: 0.7rem; margin-top: 4px;">⏳ Waiting for a donor...</div>
+            ${r.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">🔴 Urgent Need</div>' : ''}
+            <div style="font-size: 0.7rem; color: #4ECDC4; margin-top: 4px;">👤 ${escapeHtml(r.userEmail?.split('@')[0])}</div>
           </div>
         `).join('');
-      } else section.style.display = 'none';
+      }
     });
+    
     document.getElementById('enableLocationBtn')?.addEventListener('click', enableLocation);
   }
 
+  // Donate Page with Image Upload and Time Brackets
   function renderDonatePage() {
+    selectedImageFile = null;
+    const availabilityOptionsHtml = availabilityOptions.map(opt => 
+      `<option value="${opt.value}">${opt.label}</option>`
+    ).join('');
+    
     const content = document.getElementById('contentArea');
     content.innerHTML = `
       <div class="card">
         <div class="card-title"><i class="fas fa-gift"></i> Donate an Item</div>
-        <div class="form-group"><label>Item Name</label><input type="text" id="itemName" placeholder="e.g., Fresh Milk, Bread"></div>
-        <div class="form-group"><label>Expiry Date</label><input type="date" id="expiryDate"></div>
-        <div class="form-group"><label>Urgency</label><select id="urgency"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div>
-        <div class="form-group"><label>Availability</label><select id="availability"><option>Flexible</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
-        <div class="form-group"><label>Photo (optional)</label><input type="file" id="itemImage" accept="image/*"></div>
-        <div class="form-group"><label>Notes</label><textarea id="notes" placeholder="Any instructions..."></textarea></div>
-        <button class="btn btn-primary" id="submitDonationBtn">Donate</button>
+        <div class="form-group">
+          <label>📸 Product Image (Optional)</label>
+          <div class="image-upload-area" id="imageUploadArea">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Tap to add photo</p>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+          </div>
+          <img id="imagePreview" class="image-preview">
+        </div>
+        <div class="form-group">
+          <label>Item Name *</label>
+          <input type="text" id="itemName" placeholder="e.g., Fresh Milk, Bread, Vegetables">
+        </div>
+        <div class="form-group">
+          <label>Expiry Date *</label>
+          <input type="date" id="expiryDate">
+        </div>
+        <div class="form-group">
+          <label>Urgency Level</label>
+          <select id="urgency">
+            <option value="low">🟢 Low - Still fresh (3+ days left)</option>
+            <option value="medium">🟡 Medium - Expiring soon (1-2 days left)</option>
+            <option value="high">🔴 High - Expiring today/tomorrow</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>⏰ Pickup Availability Time *</label>
+          <select id="availability">
+            ${availabilityOptionsHtml}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Additional Notes (Optional)</label>
+          <textarea id="notes" placeholder="Any special instructions for pickup..."></textarea>
+        </div>
+        <button class="btn btn-primary" id="submitDonationBtn"><i class="fas fa-share-alt"></i> Donate & Auto-Match</button>
       </div>
     `;
+    
+    // Image upload handling
+    const uploadArea = document.getElementById('imageUploadArea');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    
+    uploadArea.addEventListener('click', () => imageInput.click());
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        selectedImageFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imagePreview.src = e.target.result;
+          imagePreview.classList.add('active');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    
     document.getElementById('submitDonationBtn').addEventListener('click', async () => {
-      const imageFile = document.getElementById('itemImage').files[0];
-      await addDonation(
-        document.getElementById('itemName').value,
-        document.getElementById('expiryDate').value,
-        document.getElementById('availability').value,
-        document.getElementById('urgency').value,
-        document.getElementById('notes').value,
-        imageFile
-      );
+      const name = document.getElementById('itemName').value;
+      const expiry = document.getElementById('expiryDate').value;
+      if (!name || !expiry) {
+        showToast("Please fill required fields");
+        return;
+      }
+      await addDonation(name, expiry, document.getElementById('availability').value,
+        document.getElementById('urgency').value, document.getElementById('notes').value, selectedImageFile);
       document.querySelector('[data-page="home"]').click();
     });
   }
 
-  function renderRequestPage() {
+  // Quick Request Page with Time Brackets
+  function renderQuickRequestPage() {
+    const availabilityOptionsHtml = availabilityOptions.map(opt => 
+      `<option value="${opt.value}">${opt.label}</option>`
+    ).join('');
+    
     const content = document.getElementById('contentArea');
     content.innerHTML = `
       <div class="card">
-        <div class="card-title"><i class="fas fa-hand-holding-heart"></i> Request an Item</div>
-        <div class="form-group"><label>What do you need?</label><input type="text" id="requestName" placeholder="e.g., Milk, Medicine"></div>
-        <div class="form-group"><label>Urgency</label><select id="urgencyLevel"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div>
-        <div class="form-group"><label>Availability</label><select id="pickupAvailability"><option>Flexible</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
-        <div class="form-group"><label>Reason (Optional)</label><textarea id="reason" placeholder="Why do you need this?"></textarea></div>
-        <div class="form-group"><label>Need by date</label><input type="date" id="deadline"></div>
-        <button class="btn btn-primary" id="submitRequestBtn">Post Request</button>
+        <div class="card-title"><i class="fas fa-bolt"></i> Quick Request - Get Matched Instantly</div>
+        <p style="font-size: 0.8rem; color: #6B7280; margin-bottom: 16px;">Don't have time to browse? Post what you need and our AI will find the best match for you!</p>
+        <div class="form-group">
+          <label>What do you need? *</label>
+          <input type="text" id="requestName" placeholder="e.g., Milk, Medicine, Baby Food">
+        </div>
+        <div class="form-group">
+          <label>How urgent is this?</label>
+          <select id="urgencyLevel">
+            <option value="low">🟢 Low - Can wait 3+ days</option>
+            <option value="medium">🟡 Medium - Need within 2 days</option>
+            <option value="high">🔴 High - Need today/tomorrow</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>⏰ When can you pickup? *</label>
+          <select id="pickupAvailability">
+            ${availabilityOptionsHtml}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Why do you need this? (Optional)</label>
+          <textarea id="reason" placeholder="Brief reason helps donors understand your need"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Need by date (Optional)</label>
+          <input type="date" id="deadline">
+        </div>
+        <button class="btn btn-primary" id="submitQuickRequestBtn"><i class="fas fa-magic"></i> Post & Auto-Match</button>
       </div>
     `;
-    document.getElementById('submitRequestBtn').addEventListener('click', async () => {
-      await addRequest(
-        document.getElementById('requestName').value,
-        document.getElementById('urgencyLevel').value,
-        document.getElementById('pickupAvailability').value,
-        document.getElementById('reason').value,
-        document.getElementById('deadline').value
-      );
+    
+    document.getElementById('submitQuickRequestBtn').addEventListener('click', async () => {
+      const name = document.getElementById('requestName').value;
+      if (!name) {
+        showToast("Please enter what you need");
+        return;
+      }
+      await addQuickRequest(name, document.getElementById('urgencyLevel').value,
+        document.getElementById('pickupAvailability').value, document.getElementById('reason').value);
       document.querySelector('[data-page="home"]').click();
     });
   }
@@ -626,7 +1147,7 @@
           <i class="fas fa-user-circle" style="font-size: 4rem; color: #FF6B6B;"></i>
           <h3>${escapeHtml(currentUser.email)}</h3>
         </div>
-        ${userLocation ? '<div><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Location enabled</div>' : '<button class="btn btn-primary" id="enableProfileLocation">Enable Location</button>'}
+        ${userLocation ? '<div><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Location enabled for AI matching</div>' : '<button class="btn btn-primary" id="enableProfileLocation">Enable Location</button>'}
         <button class="btn btn-outline" id="logoutBtn" style="margin-top: 16px;">Logout</button>
       </div>
     `;
@@ -647,60 +1168,76 @@
   }
 
   function renderCurrentPage() {
+    if (!currentUser) {
+      renderLoginPage();
+      return;
+    }
+    
     switch(currentPage) {
       case 'home': renderHomePage(); break;
       case 'donate': renderDonatePage(); break;
-      case 'request': renderRequestPage(); break;
+      case 'quick-request': renderQuickRequestPage(); break;
       case 'chats': renderChatList(); break;
       case 'profile': renderProfilePage(); break;
     }
   }
 
+  function renderLoginPage() {
+    const content = document.getElementById('contentArea');
+    content.innerHTML = `
+      <div class="card">
+        <div class="card-title"><i class="fas fa-lock"></i> Welcome to ReLife AI</div>
+        <div class="form-group"><input type="email" id="loginEmail" placeholder="Email"></div>
+        <div class="form-group"><input type="password" id="loginPassword" placeholder="Password"></div>
+        <button class="btn btn-primary" id="loginBtn" style="margin-bottom: 12px;">Login</button>
+        <button class="btn btn-outline" id="signupBtn">Sign Up</button>
+      </div>
+    `;
+    
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      try {
+        await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value);
+        showToast("Welcome back!");
+      } catch(err) { showToast(err.message); }
+    });
+    
+    document.getElementById('signupBtn').addEventListener('click', async () => {
+      try {
+        await createUserWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value);
+        showToast("Account created!");
+      } catch(err) { showToast(err.message); }
+    });
+  }
+
+  // Navigation
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentPage = btn.dataset.page;
-      document.getElementById('appHeader').innerHTML = `<h1><i class="fas fa-leaf"></i> ReLife AI</h1><div class="subtitle">Smart Community Expiry Rescue | Chat & Connect</div>`;
+      
+      document.getElementById('appHeader').innerHTML = `
+        <h1><i class="fas fa-leaf"></i> ReLife AI</h1>
+        <div class="subtitle">Smart Community Expiry Rescue | Chat & Connect</div>
+      `;
+      
       renderCurrentPage();
     });
   });
 
-  setInterval(updateUnreadBadge, 5000);
-
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
-    if (!user) {
-      const loginHtml = `
-        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 2000;" id="loginModal">
-          <div style="background: white; border-radius: 24px; padding: 24px; width: 90%; max-width: 320px;">
-            <h3 style="text-align: center;">Welcome to ReLife AI</h3>
-            <input type="email" id="loginEmail" placeholder="Email" style="width: 100%; padding: 12px; margin: 12px 0; border: 1px solid #E5E9F0; border-radius: 12px;">
-            <input type="password" id="loginPassword" placeholder="Password" style="width: 100%; padding: 12px; margin: 12px 0; border: 1px solid #E5E9F0; border-radius: 12px;">
-            <button id="loginBtn" class="btn btn-primary" style="margin-bottom: 8px;">Login</button>
-            <button id="signupBtn" class="btn btn-outline">Sign Up</button>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', loginHtml);
-      document.getElementById('loginBtn').addEventListener('click', async () => {
-        try {
-          await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value);
-          document.getElementById('loginModal').remove();
-          showToast("Welcome back!");
-        } catch(err) { showToast(err.message); }
-      });
-      document.getElementById('signupBtn').addEventListener('click', async () => {
-        try {
-          await createUserWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value);
-          document.getElementById('loginModal').remove();
-          showToast("Account created!");
-        } catch(err) { showToast(err.message); }
-      });
-    } else {
-      renderCurrentPage();
-      updateUnreadBadge();
-    }
+    renderCurrentPage();
+  });
+
+  document.getElementById('closeQrBtn')?.addEventListener('click', () => {
+    document.getElementById('qrModal').classList.remove('active');
+  });
+  
+  document.getElementById('closeScannerBtn')?.addEventListener('click', async () => {
+    document.getElementById('scannerModal').classList.remove('active');
+    if (html5QrScanner) await html5QrScanner.stop();
+    document.getElementById('scanResult').innerHTML = '';
   });
 </script>
 </body>
