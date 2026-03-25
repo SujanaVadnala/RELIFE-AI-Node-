@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#FF6B6B">
-  <title>ReLife AI | Smart Community Expiry Rescue</title>
+  <title>ReLife AI | Smart Community Expiry Rescue - Location Based</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -160,11 +160,6 @@
       font-family: 'Inter', sans-serif;
     }
 
-    select {
-      background: white;
-      cursor: pointer;
-    }
-
     .image-upload-area {
       border: 2px dashed #E5E9F0;
       border-radius: 12px;
@@ -193,13 +188,23 @@
     }
 
     .location-banner {
-      background: #F3F4F6;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 12px;
       padding: 12px;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      color: white;
+    }
+
+    .distance-badge {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      display: inline-block;
+      margin-top: 6px;
     }
 
     .toast {
@@ -388,14 +393,17 @@
       text-align: center;
     }
 
-    .time-badge {
-      display: inline-block;
-      background: #E8F5E9;
-      color: #2E7D32;
-      padding: 4px 8px;
+    .item-card {
+      border: 1px solid #E5E9F0;
       border-radius: 12px;
-      font-size: 0.7rem;
-      margin-top: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+
+    .item-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     @media (max-width: 450px) {
@@ -411,7 +419,7 @@
     <h1>
       <i class="fas fa-leaf"></i> ReLife AI
     </h1>
-    <div class="subtitle">Smart Community Expiry Rescue | Chat & Connect</div>
+    <div class="subtitle">Smart Community Expiry Rescue | Location Based</div>
   </div>
 
   <div class="content-area" id="contentArea"></div>
@@ -501,6 +509,29 @@
     { value: "Flexible - Any time", label: "🕒 Flexible - Any time" }
   ];
 
+  // Calculate distance between two coordinates (in km)
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    if (!lat1 || !lat2 || !lon1 || !lon2) return null;
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  // Filter items by location (only show items within 50km)
+  function filterByLocation(items, userLoc, maxDistance = 50) {
+    if (!userLoc || !items) return items;
+    return items.filter(item => {
+      if (!item.location) return false;
+      const distance = calculateDistance(userLoc.lat, userLoc.lng, item.location.lat, item.location.lng);
+      return distance !== null && distance <= maxDistance;
+    });
+  }
+
   function showToast(message) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
@@ -513,13 +544,17 @@
       showToast("Geolocation not supported");
       return;
     }
+    showToast("📍 Getting your location...");
     navigator.geolocation.getCurrentPosition(
       (position) => {
         userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
-        showToast("📍 Location enabled!");
+        showToast(`📍 Location set! Showing items near you.`);
         renderCurrentPage();
       },
-      () => showToast("Please enable location")
+      (error) => {
+        console.error("Location error:", error);
+        showToast("Please enable location to see nearby items");
+      }
     );
   }
 
@@ -888,9 +923,14 @@
     });
   }
 
-  // Add Donation with Image
+  // Add Donation with Location
   async function addDonation(name, expiry, availability, urgency, notes, imageFile) {
     if (!currentUser) return showToast("Please login");
+    if (!userLocation) {
+      showToast("Please enable location first");
+      enableLocation();
+      return;
+    }
     
     let imageUrl = null;
     if (imageFile) {
@@ -901,108 +941,227 @@
     try {
       await addDoc(collection(db, "donations"), {
         name, expiryDate: expiry, availability, urgency, notes, imageUrl,
-        donorLocation: userLocation,
+        location: userLocation,
         userId: currentUser.uid,
         userEmail: currentUser.email,
         createdAt: serverTimestamp(),
         status: "available"
       });
-      showToast("✓ Item donated! AI will find matches automatically.");
+      showToast("✓ Item donated! Others nearby can now see it.");
       setTimeout(() => findAndCreateMatches(), 2000);
       return true;
     } catch(err) { showToast("Error: " + err.message); return false; }
   }
 
-  // Quick Request - No browsing needed
+  // Quick Request with Location
   async function addQuickRequest(name, urgency, availability, reason) {
     if (!currentUser) return showToast("Please login");
+    if (!userLocation) {
+      showToast("Please enable location first");
+      enableLocation();
+      return;
+    }
+    
     try {
       await addDoc(collection(db, "requests"), {
         name, urgency, availability, reason,
-        requesterLocation: userLocation,
+        location: userLocation,
         userId: currentUser.uid,
         userEmail: currentUser.email,
         createdAt: serverTimestamp(),
         status: "pending"
       });
-      showToast("✓ Request posted! AI is finding matches for you...");
+      showToast("✓ Request posted! Nearby donors can now help you.");
       setTimeout(() => findAndCreateMatches(), 2000);
       return true;
     } catch(err) { showToast("Error: " + err.message); return false; }
   }
 
-  // Home Page - Real-time donations and requests
+  // Home Page - Location-based filtering
   async function renderHomePage() {
     const content = document.getElementById('contentArea');
     content.innerHTML = `
       ${!userLocation ? `
         <div class="location-banner">
-          <div><i class="fas fa-map-marker-alt"></i> Enable location for better matches</div>
-          <button class="btn btn-primary" id="enableLocationBtn" style="width: auto; padding: 8px 16px;">Enable</button>
+          <div><i class="fas fa-map-marker-alt"></i> Enable location to see nearby items</div>
+          <button class="btn btn-primary" id="enableLocationBtn" style="width: auto; padding: 8px 16px; background: white; color: #667eea;">Enable</button>
         </div>
       ` : `
         <div class="location-banner">
-          <div><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Location active | AI Matching Ready</div>
+          <div><i class="fas fa-check-circle"></i> Showing items within 50km of your location</div>
+          <div style="font-size: 0.7rem;">📍 ${userLocation.lat.toFixed(2)}°, ${userLocation.lng.toFixed(2)}°</div>
         </div>
       `}
       
       <div class="card">
-        <div class="card-title"><i class="fas fa-gift"></i> Available Donations (Real-time)</div>
-        <div id="donationsList">Loading...</div>
+        <div class="card-title"><i class="fas fa-gift"></i> Nearby Donations</div>
+        <div id="donationsList">Loading nearby donations...</div>
       </div>
       
       <div class="card">
-        <div class="card-title"><i class="fas fa-hand-holding-heart"></i> Active Requests</div>
-        <div id="requestsList">Loading...</div>
+        <div class="card-title"><i class="fas fa-hand-holding-heart"></i> Nearby Requests</div>
+        <div id="requestsList">Loading nearby requests...</div>
       </div>
     `;
     
+    // Load all donations and filter by location
     const donationsQuery = query(collection(db, "donations"), where("status", "==", "available"), orderBy("createdAt", "desc"));
     onSnapshot(donationsQuery, (snapshot) => {
-      const donations = [];
-      snapshot.forEach(doc => donations.push({ id: doc.id, ...doc.data() }));
-      const container = document.getElementById('donationsList');
-      if (donations.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 20px;">No donations available</div>';
-      } else {
-        container.innerHTML = donations.map(d => `
-          <div style="border: 1px solid #E5E9F0; border-radius: 12px; padding: 12px; margin-bottom: 12px;">
-            ${d.imageUrl ? `<img src="${d.imageUrl}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">` : ''}
-            <strong>${escapeHtml(d.name)}</strong><br>
-            <small>📅 Expires: ${formatDate(d.expiryDate)}</small><br>
-            <small>⏰ Available: ${escapeHtml(d.availability)}</small>
-            ${d.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">⚠️ Urgent - Expiring Soon!</div>' : ''}
-            <div style="font-size: 0.7rem; color: #4ECDC4; margin-top: 4px;">👤 ${escapeHtml(d.userEmail?.split('@')[0])}</div>
-          </div>
-        `).join('');
+      const allDonations = [];
+      snapshot.forEach(doc => allDonations.push({ id: doc.id, ...doc.data() }));
+      
+      // Filter donations by location (only show within 50km)
+      let nearbyDonations = allDonations;
+      if (userLocation) {
+        nearbyDonations = allDonations.filter(d => {
+          if (!d.location) return false;
+          const distance = calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng);
+          return distance !== null && distance <= 50;
+        });
+        // Sort by distance
+        nearbyDonations.sort((a, b) => {
+          const distA = calculateDistance(userLocation.lat, userLocation.lng, a.location?.lat, a.location?.lng) || 999;
+          const distB = calculateDistance(userLocation.lat, userLocation.lng, b.location?.lat, b.location?.lng) || 999;
+          return distA - distB;
+        });
       }
+      
+      const container = document.getElementById('donationsList');
+      if (nearbyDonations.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 20px;">No donations found nearby. Be the first to donate!</div>';
+      } else {
+        container.innerHTML = nearbyDonations.map(d => {
+          const distance = userLocation && d.location ? 
+            calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng).toFixed(1) : null;
+          return `
+            <div class="item-card">
+              ${d.imageUrl ? `<img src="${d.imageUrl}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">` : ''}
+              <strong>${escapeHtml(d.name)}</strong><br>
+              <small>📅 Expires: ${formatDate(d.expiryDate)}</small><br>
+              <small>⏰ Available: ${escapeHtml(d.availability)}</small>
+              ${distance ? `<div class="distance-badge">📍 ${distance} km away</div>` : ''}
+              ${d.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">⚠️ Urgent - Expiring Soon!</div>' : ''}
+              <div style="font-size: 0.7rem; color: #4ECDC4; margin-top: 4px;">👤 ${escapeHtml(d.userEmail?.split('@')[0])}</div>
+              ${currentUser && d.userId !== currentUser.uid ? 
+                `<button class="btn btn-primary request-item-btn" style="margin-top: 8px; padding: 8px;" data-id="${d.id}" data-donor="${d.userId}" data-donor-name="${escapeHtml(d.userEmail?.split('@')[0])}" data-name="${escapeHtml(d.name)}"><i class="fas fa-comment"></i> Request & Chat</button>` : 
+                (d.userId === currentUser?.uid ? '<div style="margin-top: 8px; color: #4ECDC4;"><i class="fas fa-check"></i> Your donation</div>' : '')}
+            </div>
+          `;
+        }).join('');
+      }
+      
+      document.querySelectorAll('.request-item-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const donationId = btn.dataset.id;
+          const donorId = btn.dataset.donor;
+          const donorName = btn.dataset.donorName;
+          const itemName = btn.dataset.name;
+          requestItem(donationId, donorId, donorName, itemName);
+        });
+      });
     });
     
+    // Load all requests and filter by location
     const requestsQuery = query(collection(db, "requests"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
     onSnapshot(requestsQuery, (snapshot) => {
-      const requests = [];
-      snapshot.forEach(doc => requests.push({ id: doc.id, ...doc.data() }));
+      const allRequests = [];
+      snapshot.forEach(doc => allRequests.push({ id: doc.id, ...doc.data() }));
+      
+      // Filter requests by location
+      let nearbyRequests = allRequests;
+      if (userLocation) {
+        nearbyRequests = allRequests.filter(r => {
+          if (!r.location) return false;
+          const distance = calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng);
+          return distance !== null && distance <= 50;
+        });
+        nearbyRequests.sort((a, b) => {
+          const distA = calculateDistance(userLocation.lat, userLocation.lng, a.location?.lat, a.location?.lng) || 999;
+          const distB = calculateDistance(userLocation.lat, userLocation.lng, b.location?.lat, b.location?.lng) || 999;
+          return distA - distB;
+        });
+      }
+      
       const container = document.getElementById('requestsList');
-      if (requests.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 20px;">No active requests</div>';
+      if (nearbyRequests.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 20px;">No requests found nearby. Post a quick request!</div>';
       } else {
-        container.innerHTML = requests.map(r => `
-          <div style="border: 1px solid #E5E9F0; border-radius: 12px; padding: 12px; margin-bottom: 12px;">
-            <strong>${escapeHtml(r.name)}</strong><br>
-            <small>⚠️ Urgency: ${r.urgency.toUpperCase()} | Need by: ${r.deadline || 'ASAP'}</small><br>
-            <small>⏰ Available: ${escapeHtml(r.availability)}</small>
-            ${r.reason ? `<small><br>💬 "${escapeHtml(r.reason)}"</small>` : ''}
-            ${r.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">🔴 Urgent Need</div>' : ''}
-            <div style="font-size: 0.7rem; color: #4ECDC4; margin-top: 4px;">👤 ${escapeHtml(r.userEmail?.split('@')[0])}</div>
-          </div>
-        `).join('');
+        container.innerHTML = nearbyRequests.map(r => {
+          const distance = userLocation && r.location ? 
+            calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng).toFixed(1) : null;
+          return `
+            <div class="item-card">
+              <strong>${escapeHtml(r.name)}</strong><br>
+              <small>⚠️ Urgency: ${r.urgency.toUpperCase()} | Need by: ${r.deadline || 'ASAP'}</small><br>
+              <small>⏰ Available: ${escapeHtml(r.availability)}</small>
+              ${distance ? `<div class="distance-badge">📍 ${distance} km away</div>` : ''}
+              ${r.reason ? `<small><br>💬 "${escapeHtml(r.reason)}"</small>` : ''}
+              ${r.urgency === 'high' ? '<div style="color: #DC2626; font-size: 0.7rem; margin-top: 4px;">🔴 Urgent Need</div>' : ''}
+              <div style="font-size: 0.7rem; color: #4ECDC4; margin-top: 4px;">👤 ${escapeHtml(r.userEmail?.split('@')[0])}</div>
+              ${r.userId === currentUser?.uid ? '<div style="margin-top: 8px; color: #4ECDC4;"><i class="fas fa-check"></i> Your request</div>' : ''}
+            </div>
+          `;
+        }).join('');
       }
     });
     
     document.getElementById('enableLocationBtn')?.addEventListener('click', enableLocation);
   }
 
-  // Donate Page with Image Upload and Time Brackets
+  async function requestItem(donationId, donorId, donorName, itemName) {
+    if (!currentUser) {
+      showToast("Please login first");
+      return;
+    }
+    if (currentUser.uid === donorId) {
+      showToast("You cannot request your own item");
+      return;
+    }
+    
+    try {
+      await updateDoc(doc(db, "donations", donationId), { 
+        status: "requested",
+        requestedBy: currentUser.uid,
+        requestedAt: serverTimestamp()
+      });
+      
+      const chatId = await getOrCreateChatRoom(donorId, donorName, donationId, itemName);
+      await sendMessage(chatId, `Hi! I'm interested in your ${itemName}. When can I pick it up?`);
+      
+      showToast(`✓ Request sent! You can now chat with ${donorName}`);
+      document.querySelector('[data-page="chats"]').click();
+    } catch(err) {
+      showToast("Error: " + err.message);
+    }
+  }
+
+  async function getOrCreateChatRoom(otherUserId, otherUserName, matchId, itemName) {
+    if (!currentUser) return null;
+    
+    const chatId = [currentUser.uid, otherUserId].sort().join('_');
+    const chatsQuery = query(collection(db, "chats"), where("chatId", "==", chatId));
+    const chatSnapshot = await getDocs(chatsQuery);
+    
+    if (chatSnapshot.empty) {
+      await addDoc(collection(db, "chats"), {
+        chatId: chatId,
+        participants: [currentUser.uid, otherUserId],
+        participantNames: {
+          [currentUser.uid]: currentUser.email.split('@')[0],
+          [otherUserId]: otherUserName
+        },
+        matchId: matchId,
+        itemName: itemName,
+        lastMessage: "Chat started",
+        lastMessageTime: serverTimestamp(),
+        createdAt: serverTimestamp()
+      });
+    }
+    
+    return chatId;
+  }
+
+  // Donate Page
   function renderDonatePage() {
     selectedImageFile = null;
     const availabilityOptionsHtml = availabilityOptions.map(opt => 
@@ -1013,6 +1172,7 @@
     content.innerHTML = `
       <div class="card">
         <div class="card-title"><i class="fas fa-gift"></i> Donate an Item</div>
+        ${!userLocation ? '<div class="location-banner" style="margin-bottom: 16px;"><i class="fas fa-map-marker-alt"></i> Location needed to share with nearby people</div>' : ''}
         <div class="form-group">
           <label>📸 Product Image (Optional)</label>
           <div class="image-upload-area" id="imageUploadArea">
@@ -1048,11 +1208,10 @@
           <label>Additional Notes (Optional)</label>
           <textarea id="notes" placeholder="Any special instructions for pickup..."></textarea>
         </div>
-        <button class="btn btn-primary" id="submitDonationBtn"><i class="fas fa-share-alt"></i> Donate & Auto-Match</button>
+        <button class="btn btn-primary" id="submitDonationBtn"><i class="fas fa-share-alt"></i> Donate & Share with Nearby</button>
       </div>
     `;
     
-    // Image upload handling
     const uploadArea = document.getElementById('imageUploadArea');
     const imageInput = document.getElementById('imageInput');
     const imagePreview = document.getElementById('imagePreview');
@@ -1084,7 +1243,7 @@
     });
   }
 
-  // Quick Request Page with Time Brackets
+  // Quick Request Page
   function renderQuickRequestPage() {
     const availabilityOptionsHtml = availabilityOptions.map(opt => 
       `<option value="${opt.value}">${opt.label}</option>`
@@ -1094,7 +1253,8 @@
     content.innerHTML = `
       <div class="card">
         <div class="card-title"><i class="fas fa-bolt"></i> Quick Request - Get Matched Instantly</div>
-        <p style="font-size: 0.8rem; color: #6B7280; margin-bottom: 16px;">Don't have time to browse? Post what you need and our AI will find the best match for you!</p>
+        <p style="font-size: 0.8rem; color: #6B7280; margin-bottom: 16px;">Post what you need and nearby donors will see your request!</p>
+        ${!userLocation ? '<div class="location-banner" style="margin-bottom: 16px;"><i class="fas fa-map-marker-alt"></i> Location needed to find nearby donors</div>' : ''}
         <div class="form-group">
           <label>What do you need? *</label>
           <input type="text" id="requestName" placeholder="e.g., Milk, Medicine, Baby Food">
@@ -1121,7 +1281,7 @@
           <label>Need by date (Optional)</label>
           <input type="date" id="deadline">
         </div>
-        <button class="btn btn-primary" id="submitQuickRequestBtn"><i class="fas fa-magic"></i> Post & Auto-Match</button>
+        <button class="btn btn-primary" id="submitQuickRequestBtn"><i class="fas fa-magic"></i> Post & Find Nearby Donors</button>
       </div>
     `;
     
@@ -1147,7 +1307,10 @@
           <i class="fas fa-user-circle" style="font-size: 4rem; color: #FF6B6B;"></i>
           <h3>${escapeHtml(currentUser.email)}</h3>
         </div>
-        ${userLocation ? '<div><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Location enabled for AI matching</div>' : '<button class="btn btn-primary" id="enableProfileLocation">Enable Location</button>'}
+        ${userLocation ? 
+          `<div><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Location: ${userLocation.lat.toFixed(4)}°, ${userLocation.lng.toFixed(4)}°</div>
+           <div style="margin-top: 8px;"><i class="fas fa-globe"></i> Showing items within 50km</div>` : 
+          '<button class="btn btn-primary" id="enableProfileLocation">Enable Location to See Nearby Items</button>'}
         <button class="btn btn-outline" id="logoutBtn" style="margin-top: 16px;">Logout</button>
       </div>
     `;
@@ -1218,7 +1381,7 @@
       
       document.getElementById('appHeader').innerHTML = `
         <h1><i class="fas fa-leaf"></i> ReLife AI</h1>
-        <div class="subtitle">Smart Community Expiry Rescue | Chat & Connect</div>
+        <div class="subtitle">Smart Community Expiry Rescue | Location Based</div>
       `;
       
       renderCurrentPage();
