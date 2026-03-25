@@ -3,88 +3,552 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#FF6B6B">
   <title>ReLife AI | Smart Community Expiry Rescue</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .app-wrapper { max-width: 450px; margin: 0 auto; background: #F5F7FA; min-height: 100vh; position: relative; }
-    .app-header { background: linear-gradient(135deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7); color: white; padding: 20px; position: sticky; top: 0; z-index: 100; }
-    .app-header h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
-    .subtitle { font-size: 0.75rem; margin-top: 5px; opacity: 0.9; }
-    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); max-width: 450px; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 20px 20px; border-top: 1px solid #E5E9F0; z-index: 100; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; color: #9CA3AF; font-size: 0.7rem; transition: all 0.3s ease; }
-    .nav-item i { font-size: 1.3rem; }
-    .nav-item.active { color: #FF6B6B; }
-    .content-area { padding: 20px; padding-bottom: 80px; margin-bottom: 60px; }
-    .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .btn { padding: 12px; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; width: 100%; transition: all 0.2s; }
-    .btn-primary { background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; }
-    .btn-outline { background: transparent; border: 2px solid #FF6B6B; color: #FF6B6B; }
-    .btn-success { background: linear-gradient(135deg, #4ECDC4, #45B7D1); color: white; }
-    .form-group { margin-bottom: 16px; }
-    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; color: #374151; }
-    input, textarea, select { width: 100%; padding: 12px; border: 1px solid #E5E9F0; border-radius: 12px; font-size: 0.9rem; font-family: 'Inter', sans-serif; }
-    .image-upload-area { border: 2px dashed #E5E9F0; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
-    .image-upload-area:hover { border-color: #FF6B6B; background: #FFF5F5; }
-    .image-preview { width: 100%; max-height: 150px; object-fit: cover; border-radius: 12px; margin-top: 12px; display: none; }
-    .image-preview.active { display: block; }
-    .location-banner { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; color: white; }
-    .distance-badge { background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; display: inline-block; margin-top: 6px; }
-    .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1F2937; color: white; padding: 12px 20px; border-radius: 40px; font-size: 0.85rem; z-index: 1000; transition: 0.3s; opacity: 0; pointer-events: none; }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .item-card { border: 1px solid #E5E9F0; border-radius: 12px; padding: 12px; margin-bottom: 12px; transition: all 0.2s; background: white; }
-    .item-card:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 180px); }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .message { max-width: 80%; padding: 10px 14px; border-radius: 18px; word-wrap: break-word; }
-    .message-sent { background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-    .message-received { background: #E5E9F0; color: #1A2C3E; align-self: flex-start; border-bottom-left-radius: 4px; }
-    .message-time { font-size: 0.65rem; margin-top: 4px; opacity: 0.7; }
-    .chat-input-area { padding: 16px; background: white; border-top: 1px solid #E5E9F0; display: flex; gap: 10px; }
-    .chat-input-area input { flex: 1; padding: 12px; border: 1px solid #E5E9F0; border-radius: 25px; }
-    .chat-input-area button { width: auto; padding: 12px 20px; background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; border: none; border-radius: 25px; cursor: pointer; }
-    .chat-list-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid #E5E9F0; cursor: pointer; transition: background 0.2s; }
-    .chat-list-item:hover { background: #F9FAFB; }
-    .chat-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #FF6B6B, #FF4757); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
-    .back-button { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: white; margin-right: 10px; }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; visibility: hidden; opacity: 0; transition: 0.3s; }
-    .modal.active { visibility: visible; opacity: 1; }
-    .modal-content { background: white; border-radius: 24px; padding: 24px; max-width: 90%; width: 320px; text-align: center; }
-    @media (max-width: 450px) { .app-wrapper { width: 100%; } }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 16px;
+    }
+
+    .app-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 32px;
+      padding: 20px 20px 32px;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sub {
+      color: #666;
+      font-weight: 500;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      border-left: 4px solid #ff7043;
+      padding-left: 12px;
+    }
+
+    .auth-section {
+      background: white;
+      border-radius: 24px;
+      padding: 24px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.85rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 2px solid #e0e7e5;
+      font-size: 0.9rem;
+      transition: 0.2s;
+      outline: none;
+      background: white;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #667eea;
+      color: #667eea;
+    }
+
+    .btn-outline:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .flex-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .flex-btns button {
+      flex: 1;
+    }
+
+    .user-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      border-radius: 60px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .donor-avatar {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .donor-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .user-email {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #333;
+      word-break: break-all;
+    }
+
+    .add-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .form-row input, .form-row select, .form-row button {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .time-dropdown-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 18px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .time-dropdown-row label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .time-dropdown-row select {
+      flex: 2;
+      padding: 10px 12px;
+      background: white;
+    }
+
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 16px;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-bottom: 10px;
+    }
+
+    .item-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+      transition: transform 0.2s ease;
+      animation: slideIn 0.3s ease-out;
+      position: relative;
+      border: 1px solid #f0f0f0;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .item-card.claimed {
+      opacity: 0.7;
+      background: #f8f9fa;
+    }
+
+    .claimed-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #ff7043;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+
+    .donor-info-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0 6px;
+      background: #f8faff;
+      padding: 8px 12px;
+      border-radius: 40px;
+      width: fit-content;
+    }
+    .donor-mini-avatar {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .donor-name-text {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .item-name {
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+      padding-right: 70px;
+    }
+
+    .expiry-date, .availability-info {
+      font-size: 0.8rem;
+      color: #666;
+      margin: 5px 0;
+    }
+
+    .availability-info {
+      background: #eef2ff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .priority-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .priority-high { background: #e53935; color: white; }
+    .priority-medium { background: #ffb300; color: #333; }
+    .priority-low { background: #43a047; color: white; }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .request-btn, .qr-btn {
+      padding: 10px 16px;
+      border-radius: 40px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .request-btn {
+      background: #ff7043;
+      color: white;
+    }
+
+    .request-btn:hover {
+      background: #f4511e;
+    }
+
+    .qr-btn {
+      background: #667eea;
+      color: white;
+    }
+
+    .qr-btn:hover {
+      background: #5a67d8;
+    }
+
+    .scan-qr-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin-bottom: 20px;
+      width: 100%;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .empty-state {
+      text-align: center;
+      background: #f8f9fa;
+      border-radius: 20px;
+      padding: 40px 20px;
+      color: #666;
+    }
+
+    .toast-message {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: rgba(0,0,0,0.9);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 60px;
+      font-weight: 600;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      font-size: 0.85rem;
+      max-width: 85%;
+      text-align: center;
+    }
+
+    .toast-show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .modal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 28px;
+      padding: 24px;
+      max-width: 90%;
+      width: 400px;
+      text-align: center;
+    }
+
+    #qr-reader {
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    .donor-info {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 16px;
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    h3, h4 {
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: 2px solid #ff7043;
+      color: #ff7043;
+      padding: 8px 18px;
+      width: auto;
+      border-radius: 40px;
+    }
+
+    .logout-btn:hover {
+      background: #ff7043;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      .app-container {
+        padding: 16px;
+      }
+      .item-name {
+        font-size: 1rem;
+        padding-right: 60px;
+      }
+      .actions {
+        flex-direction: column;
+      }
+      .request-btn, .qr-btn {
+        width: 100%;
+      }
+      .time-dropdown-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="app-wrapper">
-  <div class="app-header" id="appHeader">
-    <h1><i class="fas fa-leaf"></i> ReLife AI</h1>
-    <div class="subtitle">Smart Community Expiry Rescue | 50km Radius Matching</div>
-  </div>
-  <div class="content-area" id="contentArea"></div>
-  <div class="bottom-nav">
-    <button class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
-    <button class="nav-item" data-page="donate"><i class="fas fa-gift"></i><span>Donate</span></button>
-    <button class="nav-item" data-page="quick-request"><i class="fas fa-bolt"></i><span>Request</span></button>
-    <button class="nav-item" data-page="chats"><i class="fas fa-comments"></i><span>Chats</span></button>
-    <button class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+<div class="app-container">
+  <h1><i class="fas fa-leaf"></i> ReLife AI</h1>
+  <div class="sub">Smart Community Expiry Rescue — Donate & Request with Pickup Timing</div>
+
+  <div id="authPanel"></div>
+  <div id="addItemSection" style="display: none;"></div>
+  
+  <button id="openScannerBtn" class="scan-qr-btn" style="display: none;">
+    <i class="fas fa-qrcode"></i> Scan QR to Claim Item
+  </button>
+  
+  <h3><i class="fas fa-boxes"></i> Available Items</h3>
+  <div id="itemsContainer" class="items-list"></div>
+</div>
+
+<div id="toastMsg" class="toast-message"></div>
+
+<!-- QR Code Modal -->
+<div id="qrModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-qrcode"></i> Item QR Code</h3>
+    <div id="qrCodeContainer" style="display: flex; justify-content: center; margin: 20px 0;"></div>
+    <p style="font-size: 0.8rem; color: #666;">Share this QR with requesters to claim the item</p>
+    <button id="closeQrBtn" class="btn-primary" style="margin-top: 10px;">Close</button>
   </div>
 </div>
-<div id="toast" class="toast"></div>
-<div id="qrModal" class="modal"><div class="modal-content"><h3>Pickup QR Code</h3><div id="qrCodeContainer"></div><button class="btn btn-primary" id="closeQrBtn">Close</button></div></div>
-<div id="scannerModal" class="modal"><div class="modal-content"><h3>Scan QR Code</h3><div id="qr-reader"></div><div id="scanResult"></div><button class="btn btn-secondary" id="closeScannerBtn">Close</button></div></div>
+
+<!-- Scanner Modal -->
+<div id="scannerModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-camera"></i> Scan QR Code</h3>
+    <div id="qr-reader" style="width: 100%;"></div>
+    <div id="scanResult"></div>
+    <button id="closeScannerBtn" class="btn-primary" style="margin-top: 10px;">Close</button>
+  </div>
+</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
-  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBOPmt7VHvKphPe6SUECih058r0TTel8qk",
@@ -92,484 +556,404 @@
     projectId: "relife-ai-6a941",
     storageBucket: "relife-ai-6a941.firebasestorage.app",
     messagingSenderId: "116033291264",
-    appId: "1:116033291264:web:bde7b2567463d2761244e5"
+    appId: "1:116033291264:web:bde7b2567463d2761244e5",
+    measurementId: "G-WSJ1JCM9F7"
   };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  const storage = getStorage(app);
   
   let currentUser = null;
-  let currentPage = 'home';
-  let userLocation = null;
-  let selectedImageFile = null;
-  let html5QrScanner = null;
-  let unsubscribeDonations = null;
-  let unsubscribeRequests = null;
-  let unsubscribeMessages = null;
+  let unsubscribeItems = null;
+  let html5QrCode = null;
 
-  const availabilityOptions = ["🌅 Early Morning (5-8 AM)", "☀️ Morning (8 AM-12 PM)", "🌤️ Afternoon (12-4 PM)", "🌙 Evening (4-7 PM)", "⭐ Night (7-10 PM)", "🕒 Flexible"];
-
-  function showToast(msg) { const toast = document.getElementById('toast'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2500); }
-
-  function calculateDistance(lat1, lon1, lat2, lon2) {
-    if (!lat1 || !lat2 || !lon1 || !lon2) return null;
-    const R = 6371;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
+  function showToast(message, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    toast.textContent = message;
+    toast.classList.add('toast-show');
+    setTimeout(() => toast.classList.remove('toast-show'), 2500);
   }
 
-  function enableLocation() {
-    if (!navigator.geolocation) { showToast("Geolocation not supported"); return; }
-    showToast("Getting your location...");
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
-        showToast(`📍 Location set! You can now donate/request within 50km radius.`);
-        renderCurrentPage();
-      },
-      () => showToast("Please enable location to use the app")
-    );
+  function getPriorityInfo(expiryDateStr) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const expiry = new Date(expiryDateStr);
+    expiry.setHours(0,0,0,0);
+    const diffDays = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+    if (diffDays <= 1) return { label: 'High Priority', class: 'priority-high', icon: '🔴', days: diffDays };
+    if (diffDays <= 3) return { label: 'Medium Priority', class: 'priority-medium', icon: '🟡', days: diffDays };
+    return { label: 'Low Priority', class: 'priority-low', icon: '🟢', days: diffDays };
   }
 
-  async function uploadImage(file) {
-    if (!file) return null;
-    const storageRef = ref(storage, `items/${Date.now()}_${file.name}`);
-    await uploadBytes(storageRef, file);
-    return await getDownloadURL(storageRef);
+  function formatDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   }
 
-  // DONATE ITEM
-  async function donateItem(name, expiry, availability, urgency, notes, imageFile) {
-    if (!currentUser) return showToast("Please login");
-    if (!userLocation) { showToast("Enable location first"); enableLocation(); return; }
-    
-    let imageUrl = null;
-    if (imageFile) { showToast("Uploading image..."); imageUrl = await uploadImage(imageFile); }
-    
-    try {
-      await addDoc(collection(db, "donations"), {
-        name, expiryDate: expiry, availability, urgency, notes, imageUrl,
-        location: userLocation,
-        userId: currentUser.uid,
-        userName: currentUser.email.split('@')[0],
-        userEmail: currentUser.email,
-        createdAt: serverTimestamp(),
-        status: "available"
-      });
-      showToast(`✓ "${name}" donated! Others can request it now.`);
-      return true;
-    } catch(err) { showToast("Error: " + err.message); return false; }
+  function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
-  // QUICK REQUEST
-  async function quickRequest(name, urgency, availability, reason) {
-    if (!currentUser) return showToast("Please login");
-    if (!userLocation) { showToast("Enable location first"); enableLocation(); return; }
-    
-    try {
-      await addDoc(collection(db, "requests"), {
-        name, urgency, availability, reason,
-        location: userLocation,
-        userId: currentUser.uid,
-        userName: currentUser.email.split('@')[0],
-        userEmail: currentUser.email,
-        createdAt: serverTimestamp(),
-        status: "pending"
-      });
-      showToast(`✓ "${name}" request posted! Donors can help you.`);
-      return true;
-    } catch(err) { showToast("Error: " + err.message); return false; }
+  // Get donor initial for avatar
+  function getInitials(email) {
+    if (!email) return '?';
+    return email.charAt(0).toUpperCase();
   }
 
-  // REQUEST ITEM - WITH LOCATION CHECK (50km)
-  async function requestItem(donationId, donorId, donorName, itemName, donorLocation) {
-    if (!currentUser) { showToast("Please login"); return; }
-    if (currentUser.uid === donorId) { showToast("Cannot request your own item"); return; }
-    if (!userLocation) { showToast("Enable location to request items"); enableLocation(); return; }
-    
-    // Check distance between users
-    if (donorLocation && userLocation) {
-      const distance = calculateDistance(userLocation.lat, userLocation.lng, donorLocation.lat, donorLocation.lng);
-      if (distance > 50) {
-        showToast(`❌ Donor is ${distance.toFixed(1)}km away. Only matches within 50km are allowed.`);
-        return;
-      }
-      showToast(`✅ Donor is ${distance.toFixed(1)}km away. Within 50km radius! Opening chat...`);
+  async function claimItem(itemId, donorId, itemName, availabilityTime) {
+    if (!currentUser) {
+      showToast("Please login to claim items", true);
+      return false;
     }
-    
+    if (currentUser.uid === donorId) {
+      showToast("You cannot claim your own item", true);
+      return false;
+    }
     try {
-      await updateDoc(doc(db, "donations", donationId), { status: "requested", requestedBy: currentUser.uid });
-      
-      const chatId = [currentUser.uid, donorId].sort().join('_');
-      const existingChat = await getDocs(query(collection(db, "chats"), where("chatId", "==", chatId)));
-      
-      if (existingChat.empty) {
-        await addDoc(collection(db, "chats"), {
-          chatId: chatId,
-          participants: [currentUser.uid, donorId],
-          participantNames: {
-            [currentUser.uid]: currentUser.email.split('@')[0],
-            [donorId]: donorName
-          },
-          itemName: itemName,
-          donationId: donationId,
-          donorLocation: donorLocation,
-          requesterLocation: userLocation,
-          distance: donorLocation && userLocation ? calculateDistance(userLocation.lat, userLocation.lng, donorLocation.lat, donorLocation.lng) : null,
-          lastMessage: `${currentUser.email.split('@')[0]} requested your ${itemName}!`,
-          lastMessageTime: serverTimestamp(),
-          createdAt: serverTimestamp()
-        });
-      }
-      
-      await addDoc(collection(db, "messages"), {
-        chatId: chatId,
-        senderId: currentUser.uid,
-        senderName: currentUser.email.split('@')[0],
-        message: `Hi! I'm interested in your ${itemName}. When can I pick it up?`,
-        timestamp: serverTimestamp()
+      const itemRef = doc(db, "items", itemId);
+      await updateDoc(itemRef, {
+        claimedBy: currentUser.uid,
+        claimedByEmail: currentUser.email,
+        claimedAt: serverTimestamp(),
+        status: "claimed"
       });
-      
-      showToast(`✓ Request sent! Chat opened with ${donorName}`);
-      document.querySelector('[data-page="chats"]').click();
-    } catch(err) { showToast("Error: " + err.message); }
+      showToast(`🎉 Successfully requested "${itemName}"! Pickup timing: ${availabilityTime}`);
+      playBeep();
+      return true;
+    } catch (error) {
+      showToast("Error: " + error.message, true);
+      return false;
+    }
   }
 
-  // SEND MESSAGE
-  async function sendMessage(chatId, message) {
-    if (!message.trim()) return;
-    await addDoc(collection(db, "messages"), {
-      chatId, senderId: currentUser.uid,
-      senderName: currentUser.email.split('@')[0],
-      message: message.trim(), timestamp: serverTimestamp()
-    });
-    const chatSnap = await getDocs(query(collection(db, "chats"), where("chatId", "==", chatId)));
-    chatSnap.forEach(async (docSnap) => {
-      await updateDoc(docSnap.ref, { lastMessage: message.trim(), lastMessageTime: serverTimestamp() });
-    });
-  }
-
-  // SHOW QR CODE
-  function showQRCode(donationId, itemName) {
-    const qrData = JSON.stringify({ donationId, itemName, timestamp: Date.now() });
-    document.getElementById('qrCodeContainer').innerHTML = '';
-    new QRCode(document.getElementById('qrCodeContainer'), {
-      text: qrData, width: 200, height: 200, colorDark: "#FF6B6B"
-    });
-    document.getElementById('qrModal').classList.add('active');
-    showToast("QR Code ready! Share with receiver for pickup confirmation.");
-  }
-
-  // SCAN QR
-  async function initScanner() {
-    if (html5QrScanner) try { await html5QrScanner.stop(); } catch(e) {}
-    html5QrScanner = new Html5Qrcode("qr-reader");
+  function playBeep() {
     try {
-      await html5QrScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, async (decodedText) => {
-        try {
-          const data = JSON.parse(decodedText);
-          document.getElementById('scanResult').innerHTML = `
-            <div style="background:#D1FAE5;padding:12px;border-radius:12px;margin-top:12px;">
-              <strong>✓ Item Found!</strong><br>${escapeHtml(data.itemName)}<br>
-              <button id="confirmPickupBtn" class="btn btn-success" style="margin-top:8px;">Confirm Pickup</button>
-            </div>`;
-          document.getElementById('confirmPickupBtn')?.addEventListener('click', () => {
-            showToast("🎉 Pickup confirmed! Thank you for reducing waste!");
-            document.getElementById('scannerModal').classList.remove('active');
-            if (html5QrScanner) html5QrScanner.stop();
-          });
-        } catch(e) { document.getElementById('scanResult').innerHTML = '<p style="color:#DC2626;">Invalid QR code</p>'; }
-      });
-    } catch(err) { showToast("Camera access needed"); }
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      oscillator.connect(gain);
+      gain.connect(audioCtx.destination);
+      oscillator.frequency.value = 880;
+      gain.gain.value = 0.15;
+      oscillator.start();
+      gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+      oscillator.stop(audioCtx.currentTime + 0.3);
+    } catch(e) { console.log("Audio not supported"); }
   }
 
-  // OPEN CHAT
-  function openChat(chatId, otherName, otherId, itemName, donationId, distance) {
-    document.getElementById('appHeader').innerHTML = `
-      <button class="back-button" onclick="location.reload()">←</button>
-      <h1 style="font-size:1.2rem;"><i class="fas fa-comments"></i> Chat with ${escapeHtml(otherName)}</h1>
-      <div class="subtitle">${escapeHtml(itemName)} ${distance ? `| 📍 ${distance.toFixed(1)} km away` : ''}</div>`;
-    
-    document.getElementById('contentArea').innerHTML = `
-      <div class="chat-container">
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input-area">
-          <input type="text" id="messageInput" placeholder="Type a message...">
-          <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+  async function addNewItem(itemName, expiryDate, availabilitySlot) {
+    if (!currentUser) {
+      showToast("Please login first", true);
+      return false;
+    }
+    if (!itemName.trim() || !expiryDate) {
+      showToast("Item name and expiry date required", true);
+      return false;
+    }
+    const today = new Date().toISOString().split('T')[0];
+    if (expiryDate < today) {
+      showToast("Expiry date cannot be in the past", true);
+      return false;
+    }
+    if (!availabilitySlot) {
+      showToast("Please select availability time (Morning/Afternoon)", true);
+      return false;
+    }
+    try {
+      await addDoc(collection(db, "items"), {
+        name: itemName.trim(),
+        expiryDate: expiryDate,
+        availabilityTime: availabilitySlot,
+        createdAt: serverTimestamp(),
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        status: "available",
+        claimedBy: null
+      });
+      showToast(`✨ Item added! Pickup: ${availabilitySlot}. Share QR!`);
+      playBeep();
+      return true;
+    } catch(err) {
+      showToast("Error: " + err.message, true);
+      return false;
+    }
+  }
+
+  function renderItems(itemsArray) {
+    const container = document.getElementById('itemsContainer');
+    if (!itemsArray || itemsArray.length === 0) {
+      container.innerHTML = `<div class="empty-state"><i class="fas fa-hand-peace"></i> No items available. Be the first to donate! 🌱</div>`;
+      return;
+    }
+    container.innerHTML = '';
+    itemsArray.forEach(item => {
+      const isClaimed = item.status === 'claimed';
+      const isOwner = currentUser && item.userId === currentUser.uid;
+      const priority = getPriorityInfo(item.expiryDate);
+      const donorInitial = getInitials(item.userEmail);
+      const availabilityTime = item.availabilityTime || 'Flexible timing';
+      
+      const card = document.createElement('div');
+      card.className = `item-card ${isClaimed ? 'claimed' : ''}`;
+      card.innerHTML = `
+        ${isClaimed ? '<div class="claimed-badge">✓ Claimed</div>' : ''}
+        <div class="item-name">
+          ${escapeHtml(item.name)}
+          <span class="priority-badge ${priority.class}">${priority.icon} ${priority.label}</span>
         </div>
-      </div>`;
-    
-    if (unsubscribeMessages) unsubscribeMessages();
-    const msgsQuery = query(collection(db, "messages"), where("chatId", "==", chatId), orderBy("timestamp", "asc"));
-    unsubscribeMessages = onSnapshot(msgsQuery, (snapshot) => {
-      const msgs = []; snapshot.forEach(doc => msgs.push(doc.data()));
-      const container = document.getElementById('chatMessages');
-      if (container) {
-        container.innerHTML = msgs.map(m => `
-          <div class="message ${m.senderId === currentUser?.uid ? 'message-sent' : 'message-received'}">
-            <div>${escapeHtml(m.message)}</div>
-            <div class="message-time">${m.timestamp ? new Date(m.timestamp.toDate()).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : 'Now'}</div>
-          </div>`).join('');
-        container.scrollTop = container.scrollHeight;
-      }
+        <div class="donor-info-row">
+          <div class="donor-mini-avatar">
+            ${donorInitial}
+          </div>
+          <div class="donor-name-text">
+            <i class="fas fa-user"></i> Donor: ${escapeHtml(item.userEmail || 'Anonymous')}
+          </div>
+        </div>
+        <div class="expiry-date">
+          <i class="far fa-calendar-alt"></i> Expires: ${formatDate(item.expiryDate)} 
+          ${priority.days <= 0 ? '(Today/Expired)' : `(${priority.days} day${priority.days !== 1 ? 's' : ''} left)`}
+        </div>
+        <div class="availability-info">
+          <i class="fas fa-clock"></i> 📍 Pickup Time: ${escapeHtml(availabilityTime)}
+        </div>
+        ${isClaimed && item.claimedByEmail ? `
+          <div class="expiry-date">
+            <i class="fas fa-hand-holding-heart"></i> Requested by: ${escapeHtml(item.claimedByEmail)}
+          </div>
+        ` : ''}
+        <div class="actions">
+          ${!isClaimed && !isOwner ? `<button class="request-btn" data-id="${item.id}" data-donor="${item.userId}" data-name="${escapeHtml(item.name)}" data-time="${escapeHtml(availabilityTime)}"><i class="fas fa-hand-holding-heart"></i> Request Item</button>` : ''}
+          ${isOwner && !isClaimed ? `<button class="qr-btn" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-expiry="${item.expiryDate}" data-time="${escapeHtml(availabilityTime)}"><i class="fas fa-qrcode"></i> Show QR Code</button>` : ''}
+          ${isClaimed && isOwner ? `<span style="color: #43a047; padding: 10px;"><i class="fas fa-check-circle"></i> Claimed by ${escapeHtml(item.claimedByEmail)}</span>` : ''}
+        </div>
+      `;
+      container.appendChild(card);
     });
     
-    // Add QR button for donor
-    if (donationId && currentUser?.uid === otherId) {
-      const btnDiv = document.createElement('div');
-      btnDiv.style.padding = '12px';
-      btnDiv.innerHTML = `<button class="btn btn-primary" id="qrBtn"><i class="fas fa-qrcode"></i> Generate Pickup QR Code</button>`;
-      document.querySelector('.chat-input-area').before(btnDiv);
-      document.getElementById('qrBtn')?.addEventListener('click', () => showQRCode(donationId, itemName));
-    }
-    
-    // Add scanner button for receiver
-    if (donationId && currentUser?.uid !== otherId) {
-      const btnDiv = document.createElement('div');
-      btnDiv.style.padding = '12px';
-      btnDiv.innerHTML = `<button class="btn btn-primary" id="scanBtn"><i class="fas fa-camera"></i> Scan Donor's QR to Confirm Pickup</button>`;
-      document.querySelector('.chat-input-area').before(btnDiv);
-      document.getElementById('scanBtn')?.addEventListener('click', async () => {
-        document.getElementById('scannerModal').classList.add('active');
-        await initScanner();
+    document.querySelectorAll('.request-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const itemId = btn.getAttribute('data-id');
+        const donorId = btn.getAttribute('data-donor');
+        const itemName = btn.getAttribute('data-name');
+        const availTime = btn.getAttribute('data-time');
+        btn.style.transform = 'scale(0.95)';
+        setTimeout(() => btn.style.transform = '', 200);
+        await claimItem(itemId, donorId, itemName, availTime);
       });
-    }
-    
-    document.getElementById('sendMessageBtn').addEventListener('click', async () => {
-      const input = document.getElementById('messageInput');
-      await sendMessage(chatId, input.value);
-      input.value = '';
     });
-    document.getElementById('messageInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') document.getElementById('sendMessageBtn').click();
-    });
-  }
-
-  // RENDER HOME PAGE - SHOW ALL DONATIONS AND REQUESTS
-  function renderHomePage() {
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `
-      ${!userLocation ? `<div class="location-banner"><div><i class="fas fa-map-marker-alt"></i> Enable location to donate/request within 50km radius</div><button class="btn btn-primary" id="enableLocationBtn" style="width:auto;padding:8px 16px;">Enable</button></div>` : 
-        `<div class="location-banner"><div><i class="fas fa-check-circle"></i> Location active! You can connect with people within 50km</div><div style="font-size:0.7rem;">📍 ${userLocation.lat.toFixed(4)}°, ${userLocation.lng.toFixed(4)}°</div></div>`}
-      <div class="card"><div class="card-title"><i class="fas fa-gift"></i> Available Donations</div><div id="donationsList">Loading donations...</div></div>
-      <div class="card"><div class="card-title"><i class="fas fa-hand-holding-heart"></i> Active Requests</div><div id="requestsList">Loading requests...</div></div>`;
     
-    // REAL-TIME DONATIONS - SHOW ALL
-    if (unsubscribeDonations) unsubscribeDonations();
-    const donationsQuery = query(collection(db, "donations"), where("status", "==", "available"), orderBy("createdAt", "desc"));
-    unsubscribeDonations = onSnapshot(donationsQuery, (snapshot) => {
-      const allDonations = [];
-      snapshot.forEach(doc => allDonations.push({ id: doc.id, ...doc.data() }));
-      
-      const container = document.getElementById('donationsList');
-      if (allDonations.length === 0) container.innerHTML = '<div style="text-align:center;padding:20px;">No donations available. Be the first to donate!</div>';
-      else {
-        container.innerHTML = allDonations.map(d => {
-          // Calculate distance for display only
-          const dist = userLocation && d.location ? calculateDistance(userLocation.lat, userLocation.lng, d.location.lat, d.location.lng) : null;
-          const isWithin50km = dist !== null && dist <= 50;
-          return `<div class="item-card">
-            ${d.imageUrl ? `<img src="${d.imageUrl}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px;">` : ''}
-            <strong>${escapeHtml(d.name)}</strong><br>
-            <small>📅 Expires: ${formatDate(d.expiryDate)}</small><br>
-            <small>⏰ ${escapeHtml(d.availability)}</small>
-            ${dist ? `<div class="distance-badge">📍 ${dist.toFixed(1)} km away ${isWithin50km ? '✅ Within 50km' : '❌ Outside 50km'}</div>` : ''}
-            ${d.urgency === 'high' ? '<div style="color:#DC2626;font-size:0.7rem;">⚠️ Urgent</div>' : ''}
-            <div style="font-size:0.7rem;color:#4ECDC4;margin:4px 0;">👤 ${escapeHtml(d.userName || d.userEmail?.split('@')[0])}</div>
-            ${currentUser && d.userId !== currentUser.uid ? 
-              `<button class="btn btn-primary request-btn" data-id="${d.id}" data-donor="${d.userId}" data-donor-name="${escapeHtml(d.userName || d.userEmail?.split('@')[0])}" data-name="${escapeHtml(d.name)}" data-lat="${d.location?.lat || ''}" data-lng="${d.location?.lng || ''}" style="margin-top:8px;"><i class="fas fa-comment"></i> Request & Chat</button>` : 
-              (d.userId === currentUser?.uid ? '<div style="margin-top:8px;color:#4ECDC4;"><i class="fas fa-check"></i> Your donation</div>' : '')}
-          </div>`;
-        }).join('');
-        
-        document.querySelectorAll('.request-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const donorLocation = { lat: parseFloat(btn.dataset.lat), lng: parseFloat(btn.dataset.lng) };
-            requestItem(btn.dataset.id, btn.dataset.donor, btn.dataset.donorName, btn.dataset.name, donorLocation);
-          });
+    document.querySelectorAll('.qr-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const name = btn.getAttribute('data-name');
+        const expiry = btn.getAttribute('data-expiry');
+        const timeSlot = btn.getAttribute('data-time');
+        const qrData = JSON.stringify({ id, name, expiry, availabilityTime: timeSlot, donorEmail: currentUser?.email });
+        const qrContainer = document.getElementById('qrCodeContainer');
+        qrContainer.innerHTML = '';
+        new QRCode(qrContainer, {
+          text: qrData,
+          width: 200,
+          height: 200,
+          colorDark: "#667eea",
+          colorLight: "#ffffff"
         });
-      }
+        document.getElementById('qrModal').classList.add('active');
+      });
     });
-    
-    // REAL-TIME REQUESTS - SHOW ALL
-    if (unsubscribeRequests) unsubscribeRequests();
-    const requestsQuery = query(collection(db, "requests"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
-    unsubscribeRequests = onSnapshot(requestsQuery, (snapshot) => {
-      const allRequests = [];
-      snapshot.forEach(doc => allRequests.push({ id: doc.id, ...doc.data() }));
-      
-      const container = document.getElementById('requestsList');
-      if (allRequests.length === 0) container.innerHTML = '<div style="text-align:center;padding:20px;">No requests yet. Post a quick request!</div>';
-      else {
-        container.innerHTML = allRequests.map(r => {
-          const dist = userLocation && r.location ? calculateDistance(userLocation.lat, userLocation.lng, r.location.lat, r.location.lng) : null;
-          const isWithin50km = dist !== null && dist <= 50;
-          return `<div class="item-card">
-            <strong>${escapeHtml(r.name)}</strong><br>
-            <small>⚠️ ${r.urgency.toUpperCase()} urgency</small><br>
-            <small>⏰ ${escapeHtml(r.availability)}</small>
-            ${dist ? `<div class="distance-badge">📍 ${dist.toFixed(1)} km away ${isWithin50km ? '✅ Within 50km' : '❌ Outside 50km'}</div>` : ''}
-            ${r.reason ? `<small>💬 "${escapeHtml(r.reason)}"</small><br>` : ''}
-            ${r.urgency === 'high' ? '<div style="color:#DC2626;font-size:0.7rem;">🔴 Urgent Need</div>' : ''}
-            <div style="font-size:0.7rem;color:#4ECDC4;margin-top:4px;">👤 ${escapeHtml(r.userName || r.userEmail?.split('@')[0])}</div>
-            ${r.userId === currentUser?.uid ? '<div style="margin-top:8px;color:#4ECDC4;"><i class="fas fa-check"></i> Your request</div>' : ''}
-          </div>`;
-        }).join('');
-      }
-    });
-    
-    document.getElementById('enableLocationBtn')?.addEventListener('click', enableLocation);
   }
 
-  // RENDER CHATS
-  async function renderChats() {
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `<div class="card"><div class="card-title"><i class="fas fa-comments"></i> Your Conversations</div><div id="chatsList">Loading...</div></div>`;
-    
-    const chatsQuery = query(collection(db, "chats"), orderBy("lastMessageTime", "desc"));
-    onSnapshot(chatsQuery, (snapshot) => {
-      const chats = [];
+  function startItemsListener() {
+    if (unsubscribeItems) unsubscribeItems();
+    const q = query(collection(db, "items"), orderBy("expiryDate", "asc"));
+    unsubscribeItems = onSnapshot(q, (snapshot) => {
+      const items = [];
       snapshot.forEach(doc => {
-        const chat = doc.data();
-        if (chat.participants.includes(currentUser?.uid)) chats.push({ id: doc.id, ...chat });
+        items.push({ id: doc.id, ...doc.data() });
       });
-      const container = document.getElementById('chatsList');
-      if (chats.length === 0) container.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-comments" style="font-size:3rem;color:#9CA3AF;"></i><p>No chats yet. Request an item to start!</p></div>';
-      else {
-        container.innerHTML = chats.map(chat => {
-          const otherId = chat.participants.find(p => p !== currentUser?.uid);
-          const otherName = chat.participantNames[otherId] || 'User';
-          return `<div class="chat-list-item" data-chat-id="${chat.chatId}" data-other-name="${otherName}" data-other-id="${otherId}" data-item-name="${chat.itemName || 'Item'}" data-donation-id="${chat.donationId || ''}" data-distance="${chat.distance || ''}">
-            <div class="chat-avatar"><i class="fas fa-user"></i></div>
-            <div class="chat-info"><div class="chat-name">${escapeHtml(otherName)}</div><div class="chat-last-message">${escapeHtml(chat.lastMessage || 'Say hello!')}</div><div style="font-size:0.65rem;color:#FF6B6B;">${escapeHtml(chat.itemName || '')} ${chat.distance ? `| 📍 ${chat.distance.toFixed(1)} km` : ''}</div></div>
-            <div class="chat-time">${chat.lastMessageTime ? new Date(chat.lastMessageTime.toDate()).toLocaleDateString() : 'New'}</div>
-          </div>`;
-        }).join('');
-        document.querySelectorAll('.chat-list-item').forEach(item => {
-          item.addEventListener('click', () => openChat(item.dataset.chatId, item.dataset.otherName, item.dataset.otherId, item.dataset.itemName, item.dataset.donationId, parseFloat(item.dataset.distance)));
-        });
-      }
+      renderItems(items);
+    }, (error) => {
+      console.error("Firestore error:", error);
     });
   }
 
-  // DONATE PAGE
-  function renderDonatePage() {
-    selectedImageFile = null;
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `
-      <div class="card"><div class="card-title"><i class="fas fa-gift"></i> Donate an Item</div>
-      ${!userLocation ? '<div class="location-banner" style="margin-bottom:16px;"><i class="fas fa-map-marker-alt"></i> Enable location to share with people within 50km</div>' : ''}
-      <div class="form-group"><div class="image-upload-area" id="uploadArea"><i class="fas fa-cloud-upload-alt"></i><p>Tap to add photo (optional)</p><input type="file" id="imageInput" accept="image/*" style="display:none;"></div><img id="imagePreview" class="image-preview"></div>
-      <div class="form-group"><label>Item Name *</label><input type="text" id="itemName" placeholder="e.g., Fresh Milk, Bread"></div>
-      <div class="form-group"><label>Expiry Date *</label><input type="date" id="expiryDate"></div>
-      <div class="form-group"><label>Urgency</label><select id="urgency"><option value="low">🟢 Low - 3+ days left</option><option value="medium">🟡 Medium - 1-2 days left</option><option value="high">🔴 High - Today/tomorrow</option></select></div>
-      <div class="form-group"><label>Availability</label><select id="availability">${availabilityOptions.map(opt => `<option>${opt}</option>`).join('')}</select></div>
-      <div class="form-group"><label>Notes</label><textarea id="notes" placeholder="Pickup instructions..."></textarea></div>
-      <button class="btn btn-primary" id="submitBtn"><i class="fas fa-share-alt"></i> Donate & Share</button></div>`;
-    
-    document.getElementById('uploadArea').addEventListener('click', () => document.getElementById('imageInput').click());
-    document.getElementById('imageInput').addEventListener('change', (e) => {
-      if (e.target.files[0]) {
-        selectedImageFile = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => { document.getElementById('imagePreview').src = e.target.result; document.getElementById('imagePreview').classList.add('active'); };
-        reader.readAsDataURL(selectedImageFile);
-      }
-    });
-    document.getElementById('submitBtn').addEventListener('click', async () => {
-      const name = document.getElementById('itemName').value;
-      const expiry = document.getElementById('expiryDate').value;
-      if (!name || !expiry) { showToast("Fill required fields"); return; }
-      await donateItem(name, expiry, document.getElementById('availability').value, document.getElementById('urgency').value, document.getElementById('notes').value, selectedImageFile);
-      document.querySelector('[data-page="home"]').click();
-    });
-  }
-
-  // QUICK REQUEST PAGE
-  function renderQuickRequestPage() {
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `
-      <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> Quick Request</div>
-      <p style="font-size:0.8rem;color:#6B7280;margin-bottom:16px;">Post what you need - donors within 50km will be able to help you!</p>
-      ${!userLocation ? '<div class="location-banner" style="margin-bottom:16px;"><i class="fas fa-map-marker-alt"></i> Enable location to connect with nearby donors</div>' : ''}
-      <div class="form-group"><label>What do you need? *</label><input type="text" id="requestName" placeholder="e.g., Milk, Medicine"></div>
-      <div class="form-group"><label>Urgency</label><select id="urgencyLevel"><option value="low">🟢 Low - Can wait</option><option value="medium">🟡 Medium - Need within 2 days</option><option value="high">🔴 High - Need today/tomorrow</option></select></div>
-      <div class="form-group"><label>Availability</label><select id="pickupAvailability">${availabilityOptions.map(opt => `<option>${opt}</option>`).join('')}</select></div>
-      <div class="form-group"><label>Reason</label><textarea id="reason" placeholder="Brief reason helps donors understand..."></textarea></div>
-      <button class="btn btn-primary" id="submitRequestBtn"><i class="fas fa-magic"></i> Post Request</button></div>`;
-    
-    document.getElementById('submitRequestBtn').addEventListener('click', async () => {
-      const name = document.getElementById('requestName').value;
-      if (!name) { showToast("Enter what you need"); return; }
-      await quickRequest(name, document.getElementById('urgencyLevel').value, document.getElementById('pickupAvailability').value, document.getElementById('reason').value);
-      document.querySelector('[data-page="home"]').click();
-    });
-  }
-
-  function renderProfilePage() {
-    const content = document.getElementById('contentArea');
-    content.innerHTML = `
-      <div class="card"><div class="card-title"><i class="fas fa-user-circle"></i> My Profile</div>
-      <div style="text-align:center;"><i class="fas fa-user-circle" style="font-size:4rem;color:#FF6B6B;"></i><h3>${escapeHtml(currentUser?.email || 'User')}</h3></div>
-      ${userLocation ? `<div><i class="fas fa-check-circle" style="color:#2E7D32;"></i> Location: ${userLocation.lat.toFixed(4)}°, ${userLocation.lng.toFixed(4)}°</div><div style="margin-top:8px;"><i class="fas fa-globe"></i> You can connect with people within 50km radius</div>` : '<button class="btn btn-primary" id="enableProfileLocation">Enable Location</button>'}
-      <button class="btn btn-outline" id="logoutBtn" style="margin-top:16px;">Logout</button></div>`;
-    document.getElementById('enableProfileLocation')?.addEventListener('click', enableLocation);
-    document.getElementById('logoutBtn')?.addEventListener('click', () => signOut(auth));
-  }
-
-  function formatDate(dateStr) { return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
-  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m]; }); }
-
-  function renderCurrentPage() {
-    if (!currentUser) { renderLoginPage(); return; }
-    switch(currentPage) {
-      case 'home': renderHomePage(); break;
-      case 'donate': renderDonatePage(); break;
-      case 'quick-request': renderQuickRequestPage(); break;
-      case 'chats': renderChats(); break;
-      case 'profile': renderProfilePage(); break;
+  async function initScanner() {
+    if (html5QrCode) {
+      try { await html5QrCode.stop(); } catch(e) {}
+    }
+    html5QrCode = new Html5Qrcode("qr-reader");
+    try {
+      await html5QrCode.start({ facingMode: "environment" }, {
+        fps: 10,
+        qrbox: { width: 250, height: 250 }
+      }, async (decodedText) => {
+        try {
+          const itemData = JSON.parse(decodedText);
+          const itemRef = doc(db, "items", itemData.id);
+          const itemSnap = await getDoc(itemRef);
+          if (itemSnap.exists() && itemSnap.data().status !== 'claimed') {
+            const availTime = itemData.availabilityTime || itemSnap.data().availabilityTime || 'Flexible';
+            document.getElementById('scanResult').innerHTML = `
+              <div class="donor-info">
+                <strong>✓ Item Found!</strong><br>
+                <strong>Name:</strong> ${escapeHtml(itemData.name)}<br>
+                <strong>Expiry:</strong> ${itemData.expiry}<br>
+                <strong>Pickup Time:</strong> ${escapeHtml(availTime)}<br>
+                <strong>Donor:</strong> ${escapeHtml(itemData.donorEmail)}<br>
+                <button id="confirmClaimBtn" style="margin-top: 12px; background: #ff7043; width: 100%; padding: 12px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold;">Confirm Request</button>
+              </div>
+            `;
+            document.getElementById('confirmClaimBtn')?.addEventListener('click', async () => {
+              await claimItem(itemData.id, itemSnap.data().userId, itemData.name, availTime);
+              document.getElementById('scannerModal').classList.remove('active');
+              if (html5QrCode) await html5QrCode.stop();
+            });
+          } else {
+            document.getElementById('scanResult').innerHTML = `<p style="color: red;">❌ Item already claimed or not available!</p>`;
+            setTimeout(() => { document.getElementById('scanResult').innerHTML = ''; }, 2000);
+          }
+        } catch(e) {
+          document.getElementById('scanResult').innerHTML = `<p style="color: red;">❌ Invalid QR code</p>`;
+          setTimeout(() => { document.getElementById('scanResult').innerHTML = ''; }, 2000);
+        }
+      }, (error) => {});
+    } catch(err) {
+      showToast("Camera access failed. Please allow camera permissions.", true);
     }
   }
 
-  function renderLoginPage() {
-    document.getElementById('contentArea').innerHTML = `
-      <div class="card"><div class="card-title"><i class="fas fa-lock"></i> Welcome to ReLife AI</div>
-      <div class="form-group"><input type="email" id="loginEmail" placeholder="Email"></div>
-      <div class="form-group"><input type="password" id="loginPassword" placeholder="Password"></div>
-      <button class="btn btn-primary" id="loginBtn" style="margin-bottom:12px;">Login</button>
-      <button class="btn btn-outline" id="signupBtn">Sign Up</button>
-      <p style="font-size:0.7rem;text-align:center;margin-top:12px;">Connect with people within 50km to share and rescue food!</p></div>`;
-    document.getElementById('loginBtn').addEventListener('click', async () => {
-      try { await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); showToast("Welcome!"); } 
-      catch(err) { showToast(err.message); }
-    });
-    document.getElementById('signupBtn').addEventListener('click', async () => {
-      try { await createUserWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); showToast("Account created!"); } 
-      catch(err) { showToast(err.message); }
-    });
+  function updateAuthUI(user) {
+    currentUser = user;
+    const authPanel = document.getElementById('authPanel');
+    const addSection = document.getElementById('addItemSection');
+    const scannerBtn = document.getElementById('openScannerBtn');
+    
+    if (user) {
+      const userInitial = getInitials(user.email);
+      authPanel.innerHTML = `
+        <div class="user-info">
+          <div class="user-profile">
+            <div class="donor-avatar">
+              ${userInitial}
+            </div>
+            <div class="user-email"><strong>${escapeHtml(user.email)}</strong></div>
+          </div>
+          <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+      `;
+      addSection.style.display = 'block';
+      scannerBtn.style.display = 'block';
+      addSection.innerHTML = `
+        <div class="add-card">
+          <h4><i class="fas fa-plus-circle"></i> Donate an Item</h4>
+          <div class="form-row">
+            <input type="text" id="itemNameInput" placeholder="Item name (e.g., Milk, Bread, Vegetables)" autocomplete="off">
+            <input type="date" id="expiryDateInput">
+          </div>
+          <div class="time-dropdown-row">
+            <label><i class="fas fa-hourglass-half"></i> Pickup Availability:</label>
+            <select id="availabilitySelect">
+              <option value="">Select time slot</option>
+              <option value="Morning (8AM - 12PM)">🌅 Morning (8AM - 12PM)</option>
+              <option value="Afternoon (12PM - 5PM)">☀️ Afternoon (12PM - 5PM)</option>
+              <option value="Evening (5PM - 8PM)">🌆 Evening (5PM - 8PM)</option>
+              <option value="Flexible">🔄 Flexible - Contact donor</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <button id="submitItemBtn" class="btn-primary"><i class="fas fa-share-alt"></i> Add Item & Get QR</button>
+          </div>
+          <p style="font-size: 0.7rem; margin-top: 10px; color: #666;"><i class="fas fa-info-circle"></i> After adding, click "Show QR Code" on your item to share with requesters</p>
+        </div>
+      `;
+      document.getElementById('submitItemBtn')?.addEventListener('click', async () => {
+        const name = document.getElementById('itemNameInput').value;
+        const date = document.getElementById('expiryDateInput').value;
+        const slot = document.getElementById('availabilitySelect').value;
+        await addNewItem(name, date, slot);
+        document.getElementById('itemNameInput').value = '';
+        document.getElementById('expiryDateInput').value = '';
+        document.getElementById('availabilitySelect').value = '';
+      });
+      document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+        await signOut(auth);
+        showToast("Logged out successfully");
+      });
+      startItemsListener();
+    } else {
+      authPanel.innerHTML = `
+        <div class="auth-section">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div class="donor-avatar" style="width: 70px; height: 70px; margin: 0 auto 12px; font-size: 2rem;">🌱</div>
+            <h3 style="color: #667eea;">Welcome to ReLife AI</h3>
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-envelope"></i> Email Address</label>
+            <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email">
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <div class="flex-btns">
+            <button id="loginBtn" class="btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <button id="signupBtn" class="btn-outline"><i class="fas fa-user-plus"></i> Sign Up</button>
+          </div>
+          <p style="font-size: 0.7rem; margin-top: 16px; text-align: center; color: #999;">
+            <i class="fas fa-info-circle"></i> Create account to donate with pickup timings (Morning/Afternoon)
+          </p>
+        </div>
+      `;
+      addSection.style.display = 'none';
+      scannerBtn.style.display = 'none';
+      document.getElementById('itemsContainer').innerHTML = `<div class="empty-state"><i class="fas fa-lock"></i> Please login to see available items and start helping your community! 🌟<br><br><button id="scrollToAuth" class="btn-primary" style="margin-top: 15px; width: auto; padding: 10px 20px;">Go to Login</button></div>`;
+      
+      document.getElementById('loginBtn')?.addEventListener('click', async () => {
+        const email = document.getElementById('loginEmail').value;
+        const pwd = document.getElementById('loginPassword').value;
+        if (!email || !pwd) { showToast("Please enter both email and password", true); return; }
+        try {
+          await signInWithEmailAndPassword(auth, email, pwd);
+          showToast("Welcome back! 🎉");
+        } catch(err) {
+          if (err.code === 'auth/user-not-found') showToast("Account not found. Please sign up first.", true);
+          else if (err.code === 'auth/wrong-password') showToast("Incorrect password.", true);
+          else showToast(err.message, true);
+        }
+      });
+      document.getElementById('signupBtn')?.addEventListener('click', async () => {
+        const email = document.getElementById('loginEmail').value;
+        const pwd = document.getElementById('loginPassword').value;
+        if (!email || !pwd) { showToast("Please enter both email and password", true); return; }
+        if (pwd.length < 6) { showToast("Password must be at least 6 characters", true); return; }
+        try {
+          await createUserWithEmailAndPassword(auth, email, pwd);
+          showToast("Account created! Start donating with pickup slots 🎉");
+        } catch(err) {
+          if (err.code === 'auth/email-already-in-use') showToast("Email already registered. Please login.", true);
+          else showToast(err.message, true);
+        }
+      });
+      const scrollBtn = document.getElementById('scrollToAuth');
+      if (scrollBtn) scrollBtn.addEventListener('click', () => document.getElementById('authPanel').scrollIntoView({ behavior: 'smooth' }));
+      if (unsubscribeItems) unsubscribeItems();
+    }
   }
 
-  // NAVIGATION
-  document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentPage = btn.dataset.page;
-      document.getElementById('appHeader').innerHTML = `<h1><i class="fas fa-leaf"></i> ReLife AI</h1><div class="subtitle">Smart Community Expiry Rescue | 50km Radius</div>`;
-      renderCurrentPage();
-    });
+  onAuthStateChanged(auth, updateAuthUI);
+  document.getElementById('openScannerBtn')?.addEventListener('click', async () => {
+    document.getElementById('scannerModal').classList.add('active');
+    await initScanner();
   });
-
-  onAuthStateChanged(auth, (user) => { currentUser = user; renderCurrentPage(); });
   document.getElementById('closeQrBtn')?.addEventListener('click', () => document.getElementById('qrModal').classList.remove('active'));
-  document.getElementById('closeScannerBtn')?.addEventListener('click', async () => { document.getElementById('scannerModal').classList.remove('active'); if (html5QrScanner) await html5QrScanner.stop(); document.getElementById('scanResult').innerHTML = ''; });
+  document.getElementById('closeScannerBtn')?.addEventListener('click', async () => {
+    document.getElementById('scannerModal').classList.remove('active');
+    if (html5QrCode) { try { await html5QrCode.stop(); } catch(e) {} }
+    document.getElementById('scanResult').innerHTML = '';
+  });
 </script>
 </body>
 </html>
